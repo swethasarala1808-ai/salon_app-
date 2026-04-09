@@ -1,0 +1,38 @@
+{
+ "actions": [],
+ "autoname": "field:service_name",
+ "creation": "2026-04-01 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "service_name", "category", "gender_type", "column_break_1",
+  "price", "duration_minutes", "is_active",
+  "description", "image"
+ ],
+ "fields": [
+  {"fieldname": "service_name", "fieldtype": "Data", "label": "Service Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "category", "fieldtype": "Link", "label": "Category", "options": "Service Category", "in_list_view": 1},
+  {"fieldname": "gender_type", "fieldtype": "Select", "label": "Gender Type", "options": "\nMen\nWomen\nUnisex", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "column_break_1", "fieldtype": "Column Break"},
+  {"fieldname": "price", "fieldtype": "Currency", "label": "Price", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "duration_minutes", "fieldtype": "Int", "label": "Duration (Minutes)", "reqd": 1},
+  {"fieldname": "is_active", "fieldtype": "Check", "label": "Is Active", "default": "1", "in_list_view": 1},
+  {"fieldname": "description", "fieldtype": "Text", "label": "Description"},
+  {"fieldname": "image", "fieldtype": "Attach Image", "label": "Image"}
+ ],
+ "links": [],
+ "modified": "2026-04-01 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Salon App",
+ "name": "Salon Service",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Salon Owner", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Guest", "read": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Women Salon — Book Appointment</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#114EFF;--accent2:#1a6fff;--dark:#060b1a;--mid:#0d1630;--text:#e8eeff;--muted:#6b7db3;--border:rgba(17,78,255,.2);--card:rgba(17,78,255,.06)}
+body{font-family:'Manrope',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+nav{position:fixed;top:0;width:100%;z-index:500;background:rgba(6,11,26,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-in{max-width:1200px;margin:0 auto;padding:16px 32px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Noto Serif',serif;font-size:1.2em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo .badge{background:linear-gradient(90deg,var(--accent),#1a6fff);color:white;font-size:.7em;padding:3px 10px;border-radius:20px;font-family:'Manrope',sans-serif;font-weight:700;letter-spacing:.5px}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.88em;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-book{background:var(--accent)!important;color:white!important;padding:9px 22px;border-radius:6px;font-weight:700!important}
+.back-link{color:var(--muted);font-size:.82em;text-decoration:none}
+.back-link:hover{color:var(--text)}
+.hero{min-height:85vh;display:flex;align-items:center;padding:120px 32px 60px;background:linear-gradient(150deg,#060b1a 0%,#0a1228 50%,#060f2a 100%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(17,78,255,.12),transparent 70%)}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:2}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(17,78,255,.1);border:1px solid rgba(17,78,255,.25);border-radius:4px;padding:7px 16px;margin-bottom:24px}
+.hero-tag span{color:#6B9FFF;font-size:.76em;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.hero h1{font-family:'Noto Serif',serif;font-size:3.5em;line-height:1.08;margin-bottom:18px}
+.hero h1 span{color:var(--accent)}
+.hero-p{color:var(--muted);line-height:1.8;margin-bottom:36px;font-size:.95em}
+.hero-actions{display:flex;gap:12px}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;padding:14px 32px;border-radius:6px;font-weight:700;font-size:.9em;text-decoration:none;border:none;cursor:pointer;transition:all .2s;display:inline-block}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-outline{border:1px solid rgba(17,78,255,.4);color:#6B9FFF;padding:14px 32px;border-radius:6px;font-weight:600;font-size:.9em;text-decoration:none;transition:all .2s;display:inline-block}
+.btn-outline:hover{background:rgba(17,78,255,.1)}
+.hero-card{background:rgba(17,78,255,.08);border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:16px}
+.hc-stat{display:flex;align-items:center;gap:14px}
+.hc-ico{width:44px;height:44px;border-radius:10px;background:rgba(17,78,255,.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2em;flex-shrink:0}
+.hc-stat h4{color:var(--text);font-size:.92em;font-weight:600;margin-bottom:2px}
+.hc-stat p{color:var(--muted);font-size:.8em}
+.sec{padding:80px 32px}
+.sec-inner{max-width:1200px;margin:0 auto}
+.sec-head{margin-bottom:48px}
+.sec-label{color:var(--accent);font-size:.75em;letter-spacing:3px;text-transform:uppercase;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec-label::before{content:'';width:24px;height:2px;background:var(--accent)}
+.sec-head h2{font-family:'Noto Serif',serif;font-size:2.5em;margin-bottom:10px}
+.sec-head p{color:var(--muted);font-size:.93em}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.srv-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;cursor:pointer;transition:all .25s;text-decoration:none;display:block}
+.srv-card:hover{background:rgba(17,78,255,.12);border-color:rgba(17,78,255,.4);transform:translateY(-3px);box-shadow:0 12px 32px rgba(17,78,255,.15)}
+.srv-ico{font-size:2em;margin-bottom:14px;display:block}
+.srv-card h3{font-size:1em;font-weight:600;margin-bottom:6px;color:var(--text)}
+.srv-card p{font-size:.8em;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.srv-foot{display:flex;justify-content:space-between;align-items:center}
+.srv-price{color:#6B9FFF;font-weight:700;font-size:.92em}
+.srv-dur{color:var(--muted);font-size:.78em}
+.booking-sec{background:linear-gradient(150deg,#060b1a,#0a1228)}
+.booking-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:start}
+.bk-left h2{font-family:'Noto Serif',serif;font-size:2.4em;margin-bottom:14px}
+.bk-left>p{color:var(--muted);line-height:1.8;margin-bottom:32px;font-size:.92em}
+.promise{display:flex;gap:12px;margin-bottom:18px;align-items:flex-start}
+.p-ico{width:36px;height:36px;border-radius:8px;background:rgba(17,78,255,.12);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.95em;flex-shrink:0}
+.p-txt h4{color:#6B9FFF;font-size:.86em;font-weight:700;margin-bottom:2px}
+.p-txt p{color:var(--muted);font-size:.8em;line-height:1.5}
+.bk-form{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:36px}
+.bk-form h3{font-family:'Noto Serif',serif;font-size:1.6em;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.frow.one{grid-template-columns:1fr}
+.fg label{display:block;font-size:.73em;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:8px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.9em;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent)}
+.fg select option{background:#0d1630}
+.fg textarea{min-height:70px;resize:vertical}
+.btn-submit{width:100%;padding:15px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;border:none;border-radius:8px;font-family:'Manrope',sans-serif;font-weight:700;font-size:.9em;letter-spacing:.8px;cursor:pointer;margin-top:8px;transition:all .25s}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.5;cursor:wait}
+.success-panel{display:none;text-align:center;padding:32px}
+.success-panel .s-ico{font-size:3em;margin-bottom:16px}
+.success-panel h4{font-family:'Noto Serif',serif;font-size:1.6em;color:#6B9FFF;margin-bottom:10px}
+.success-panel p{color:var(--muted);font-size:.9em;line-height:1.7}
+.s-ref{background:rgba(17,78,255,.1);border:1px solid var(--border);border-radius:8px;padding:10px 20px;display:inline-block;margin-top:14px;font-size:.85em;color:#6B9FFF;font-weight:700;font-family:monospace}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stylist-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:all .25s}
+.stylist-card:hover{border-color:rgba(17,78,255,.4);transform:translateY(-4px);box-shadow:0 12px 32px rgba(17,78,255,.1)}
+.s-avatar{width:72px;height:72px;border-radius:50%;background:rgba(17,78,255,.15);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.8em;border:2px solid var(--border)}
+.stylist-card h4{font-size:1em;font-weight:600;margin-bottom:4px}
+.stylist-card .role{font-size:.78em;color:#6B9FFF;margin-bottom:8px}
+.stylist-card .exp{font-size:.75em;color:var(--muted)}
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pkg-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:28px;transition:all .25s}
+.pkg-card:hover{border-color:rgba(17,78,255,.4);transform:translateY(-4px)}
+.pkg-card.hot{background:rgba(17,78,255,.1);border-color:var(--accent)}
+.pkg-name{font-family:'Noto Serif',serif;font-size:1.3em;margin-bottom:8px}
+.pkg-price{font-size:2em;font-family:'Noto Serif',serif;color:var(--accent);margin-bottom:4px}
+.pkg-note{font-size:.8em;color:var(--muted);margin-bottom:16px}
+.pkg-list{list-style:none;margin-bottom:20px}
+.pkg-list li{font-size:.83em;color:var(--muted);padding:4px 0;display:flex;gap:8px}
+.pkg-list li::before{content:'✦';color:var(--accent);font-size:.7em;margin-top:3px}
+.pkg-btn{display:block;text-align:center;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;padding:12px;border-radius:8px;font-weight:700;font-size:.83em;text-decoration:none;transition:opacity .2s;border:none;cursor:pointer;width:100%}
+.pkg-btn:hover{opacity:.9}
+footer{background:#030712;padding:48px 32px;border-top:1px solid rgba(17,78,255,.1)}
+.ft{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}
+.ft-brand{font-family:'Noto Serif',serif;font-size:1.2em;color:#6B9FFF}
+.ft-links{display:flex;gap:24px}
+.ft-links a{color:var(--muted);text-decoration:none;font-size:.84em;transition:color .2s}
+.ft-links a:hover{color:var(--text)}
+.ft-copy{color:rgba(255,255,255,.2);font-size:.8em}
+.wa-float{position:fixed;bottom:24px;right:24px;z-index:400;width:52px;height:52px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(37,211,102,.4);text-decoration:none;font-size:1.5em;transition:transform .2s}
+.wa-float:hover{transform:scale(1.1)}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}.booking-wrap{grid-template-columns:1fr}.services-grid{grid-template-columns:1fr 1fr}.team-grid{grid-template-columns:1fr 1fr}.pkg-grid{grid-template-columns:1fr}.sec{padding:60px 20px}}
+@media(max-width:560px){.services-grid{grid-template-columns:1fr}.frow{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="/" class="logo">✂ Women Salon <span class="badge">WOMEN</span></a>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#team">Stylists</a>
+      <a href="#packages">Packages</a>
+      <a href="#booking" class="nav-book">Book Now</a>
+      <a href="/" class="back-link">← All Salons</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag"><span>💈 Women's Beauty Studio</span></div>
+      <h1>Glow Up,<br><span>Own It</span></h1>
+      <p class="hero-p">Hair styling, skin care, waxing, makeup, bridal services — your complete beauty destination crafted exclusively for women.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn-primary">Book Appointment</a>
+        <a href="#services" class="btn-outline">View Services</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-stat"><div class="hc-ico">✂️</div><div><h4>Expert Beauticians</h4><p>Trained in classic & modern styles</p></div></div>
+      <div class="hc-stat"><div class="hc-ico">⏱</div><div><h4>Quick Service</h4><p>Average 20-30 min per service</p></div></div>
+      <div class="hc-stat"><div class="hc-ico">💳</div><div><h4>Pay After Service</h4><p>No advance payment needed</p></div></div>
+      <div class="hc-stat"><div class="hc-ico">📅</div><div><h4>Easy Booking</h4><p>Book in under 60 seconds</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec" id="services" style="background:#070d1e">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label"><span>Women's Services</span></div>
+      <h2>What We Offer</h2>
+      <p>Click any service to pre-fill the booking form</p>
+    </div>
+    <div class="services-grid" id="servicesGrid">
+      <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading services...</div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec booking-sec" id="booking">
+  <div class="sec-inner">
+    <div class="booking-wrap">
+      <div class="bk-left">
+        <div class="sec-label"><span>Book Now</span></div>
+        <h2>Reserve Your Slot</h2>
+        <p>Fill the form and we'll call within 30 minutes to confirm.</p>
+        <div class="promise"><div class="p-ico">📞</div><div class="p-txt"><h4>Quick Confirmation</h4><p>We call within 30 min</p></div></div>
+        <div class="promise"><div class="p-ico">💳</div><div class="p-txt"><h4>Pay After Service</h4><p>No advance required</p></div></div>
+        <div class="promise"><div class="p-ico">🔄</div><div class="p-txt"><h4>Free Rescheduling</h4><p>Cancel up to 2 hrs before</p></div></div>
+        <div class="promise"><div class="p-ico">⭐</div><div class="p-txt"><h4>Expert Beauticians</h4><p>Certified professionals</p></div></div>
+      </div>
+      <div class="bk-form">
+        <h3>Book Women's Appointment</h3>
+        <form id="bookForm" autocomplete="off" onsubmit="return false">
+          <div class="frow">
+            <div class="fg"><label>Full Name *</label><input id="b-name" type="text" placeholder="Your name" required></div>
+            <div class="fg"><label>Phone *</label><input id="b-phone" type="tel" placeholder="10-digit mobile" required></div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>Service *</label><select id="b-service" required><option value="">Loading...</option></select></div>
+            <div class="fg"><label>Stylist</label><select id="b-stylist"><option value="">Any barber</option></select></div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>Date *</label><input id="b-date" type="date" required></div>
+            <div class="fg"><label>Time *</label>
+              <select id="b-time" required>
+                <option value="">Select time</option>
+                <option value="09:00:00">9:00 AM</option><option value="10:00:00">10:00 AM</option>
+                <option value="11:00:00">11:00 AM</option><option value="12:00:00">12:00 PM</option>
+                <option value="13:00:00">1:00 PM</option><option value="14:00:00">2:00 PM</option>
+                <option value="15:00:00">3:00 PM</option><option value="16:00:00">4:00 PM</option>
+                <option value="17:00:00">5:00 PM</option><option value="18:00:00">6:00 PM</option>
+                <option value="19:00:00">7:00 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="frow one"><div class="fg"><label>Special Requests</label><textarea id="b-notes" placeholder="Beard style, hair length preferences..."></textarea></div></div>
+          <button type="button" class="btn-submit" id="b-submit" onclick="submitBooking('Women','#114EFF')">✦ Book Women's Appointment</button>
+        </form>
+        <div class="success-panel" id="successPanel">
+          <div class="s-ico">💈</div>
+          <h4>Booking Confirmed!</h4>
+          <p>Thanks <strong id="conf-name"></strong>! We'll call you in 30 mins.<br>Your service: <strong id="conf-service"></strong></p>
+          <div class="s-ref" id="conf-ref"></div>
+          <br><br>
+          <button onclick="resetBookingForm()" style="background:rgba(17,78,255,.15);color:#6B9FFF;border:1px solid rgba(17,78,255,.3);padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600">Book Another →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="sec" id="team" style="background:#070d1e">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label"><span>Our Team</span></div>
+      <h2>Expert Beauticians</h2>
+    </div>
+    <div class="team-grid" id="teamGrid">
+      <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading...</div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="sec" id="packages">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <div class="sec-label"><span>Value Deals</span></div>
+      <h2>Women's Packages</h2>
+    </div>
+    <div class="pkg-grid" id="pkgGrid">
+      <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading packages...</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">
+    <div class="ft-brand">✂ Women Salon</div>
+    <div class="ft-links">
+      <a href="#services">Services</a>
+      <a href="#team">Team</a>
+      <a href="#packages">Packages</a>
+      <a href="/salon-owner">Owner Login</a>
+      <a href="/">All Salons</a>
+    </div>
+    <div class="ft-copy">© 2026 Salon App</div>
+  </div>
+</footer>
+
+<a href="#" class="wa-float" id="waFloat" target="_blank">💬</a>
+
+<script src="/assets/salon_app/js/salon.js"></script>
+<script>
+const GENDER = 'Men';
+document.getElementById('b-date').min = new Date().toISOString().split('T')[0];
+
+const ICONS_M = {'haircut':'✂️','beard':'🧔','shave':'🪒','facial':'✨','color':'🎨','grooming':'💈','men':'💈','default':'💈'};
+function getIcon(name){ const l=(name||'').toLowerCase(); for(const[k,v] of Object.entries(ICONS_M)) if(l.includes(k)) return v; return ICONS_M.default; }
+
+async function loadServices() {
+  const r = await SALON_API('salon_app.salon_app.api.get_services', {gender_type:'Women'});
+  const services = r.message || [];
+  const grid = document.getElementById('servicesGrid');
+  const sel = document.getElementById('b-service');
+  if (!services.length) { grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;grid-column:1/-1">No services found. Add them in Frappe backend.</p>'; return; }
+  grid.innerHTML = services.map(s => `
+    <a class="srv-card" href="#booking" onclick="setService('${s.service_name}')">
+      <span class="srv-ico">${getIcon(s.service_name)}</span>
+      <h3>${s.service_name}</h3>
+      <p>${s.description||s.category||'Professional grooming service'}</p>
+      <div class="srv-foot">
+        <span class="srv-price">₹${Number(s.price).toLocaleString('en-IN')}</span>
+        <span class="srv-dur">${s.duration_minutes} mins</span>
+      </div>
+    </a>`).join('');
+  sel.innerHTML = '<option value="">— Choose a service —</option>' +
+    services.map(s=>`<option value="${s.service_name}">${s.service_name} — ₹${s.price}</option>`).join('');
+}
+
+async function loadStylists() {
+  const r = await SALON_API('salon_app.salon_app.api.get_stylists', {gender_type:'Women'});
+  const stylists = r.message || [];
+  const grid = document.getElementById('teamGrid');
+  const sel = document.getElementById('b-stylist');
+  if (!stylists.length) { grid.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;grid-column:1/-1">Add stylists in Frappe backend.</p>'; return; }
+  sel.innerHTML = '<option value="">Any available barber</option>' +
+    stylists.map(s=>`<option value="${s.full_name}">${s.full_name}</option>`).join('');
+  grid.innerHTML = stylists.map(s=>`
+    <div class="stylist-card">
+      <div class="s-avatar">${s.photo?`<img src="${s.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`:'✂️'}</div>
+      <h4>${s.full_name}</h4>
+      <div class="role">${s.specialization||'Barber'}</div>
+      <div class="exp">${s.experience_years?s.experience_years+' yrs experience':''}</div>
+    </div>`).join('');
+}
+
+async function loadPackages() {
+  const r = await SALON_API('salon_app.salon_app.api.get_packages', {gender_type:'Women'});
+  const pkgs = r.message || [];
+  const grid = document.getElementById('pkgGrid');
+  if (!pkgs.length) {
+    grid.innerHTML = `
+      <div class="pkg-card hot"><div class="pkg-name">Quick Groom</div><div class="pkg-price">₹299</div><div class="pkg-note">Best value</div><ul class="pkg-list"><li>Haircut + Wash</li><li>Beard Trim</li><li>Face Cleanup</li></ul><button class="pkg-btn" onclick="setService('Men Haircut')">Book Now</button></div>
+      <div class="pkg-card"><div class="pkg-name">Groom & Style</div><div class="pkg-price">₹599</div><div class="pkg-note">Popular choice</div><ul class="pkg-list"><li>Premium Haircut</li><li>Beard Styling</li><li>Basic Facial</li><li>Head Massage</li></ul><button class="pkg-btn" onclick="setService('Men Haircut')">Book Now</button></div>
+      <div class="pkg-card"><div class="pkg-name">Royal Groom</div><div class="pkg-price">₹999</div><div class="pkg-note">Complete experience</div><ul class="pkg-list"><li>Designer Haircut</li><li>Beard Design</li><li>Detan Facial</li><li>Hair Color</li><li>Head Massage</li></ul><button class="pkg-btn" onclick="setService('Men Haircut')">Book Now</button></div>`;
+    return;
+  }
+  grid.innerHTML = pkgs.map((p,i)=>`
+    <div class="pkg-card ${i===1?'hot':''}">
+      <div class="pkg-name">${p.package_name}</div>
+      <div class="pkg-price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+      <div class="pkg-note">${p.description||''}</div>
+      <ul class="pkg-list">${(p.services_included||'').split('\n').filter(Boolean).map(s=>`<li>${s.trim()}</li>`).join('')}</ul>
+      <button class="pkg-btn" onclick="setService('${p.package_name}')">Book Now</button>
+    </div>`).join('');
+}
+
+async function loadSettings() {
+  const r = await SALON_API('salon_app.salon_app.api.get_settings');
+  const s = r.message || {};
+  if (s.phone) document.getElementById('waFloat').href = 'https://wa.me/'+s.phone.replace(/\D/g,'');
+}
+
+loadServices(); loadStylists(); loadPackages(); loadSettings();
+</script>
+</body>
+</html>

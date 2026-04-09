@@ -1,0 +1,36 @@
+{
+ "actions": [],
+ "autoname": "SALON-APT-.YYYY.-.#####",
+ "creation": "2026-04-01 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "customer_name", "fieldtype": "Data", "label": "Customer Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "customer_phone", "fieldtype": "Data", "label": "Customer Phone", "in_list_view": 1},
+  {"fieldname": "salon_type", "fieldtype": "Select", "label": "Salon Type", "options": "Men\nWomen\nUnisex", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "service", "fieldtype": "Link", "label": "Service", "options": "Salon Service", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "column_break_1", "fieldtype": "Column Break"},
+  {"fieldname": "stylist", "fieldtype": "Link", "label": "Stylist", "options": "Salon Stylist"},
+  {"fieldname": "appointment_date", "fieldtype": "Date", "label": "Date", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "appointment_time", "fieldtype": "Time", "label": "Time", "reqd": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Booked\nConfirmed\nIn Progress\nCompleted\nCancelled", "default": "Booked", "in_list_view": 1},
+  {"fieldname": "section_notes", "fieldtype": "Section Break", "label": "Notes"},
+  {"fieldname": "notes", "fieldtype": "Small Text", "label": "Notes"},
+  {"fieldname": "whatsapp_sent", "fieldtype": "Check", "label": "WhatsApp Sent"}
+ ],
+ "links": [],
+ "modified": "2026-04-01 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Salon App",
+ "name": "Salon Appointment",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Salon Owner", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Salon Receptionist", "read": 1, "write": 1, "create": 1},
+  {"role": "Guest", "read": 1, "write": 1, "create": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

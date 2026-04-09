@@ -1,0 +1,34 @@
+{
+ "actions": [],
+ "autoname": "field:full_name",
+ "creation": "2026-04-01 00:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "fields": [
+  {"fieldname": "full_name", "fieldtype": "Data", "label": "Full Name", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "gender_type", "fieldtype": "Select", "label": "Works For", "options": "Men\nWomen\nUnisex", "default": "Unisex", "in_list_view": 1},
+  {"fieldname": "specialization", "fieldtype": "Data", "label": "Specialization", "in_list_view": 1},
+  {"fieldname": "phone", "fieldtype": "Data", "label": "Phone", "reqd": 1},
+  {"fieldname": "column_break_1", "fieldtype": "Column Break"},
+  {"fieldname": "experience_years", "fieldtype": "Int", "label": "Experience (Years)"},
+  {"fieldname": "is_active", "fieldtype": "Check", "label": "Is Active", "default": "1", "in_list_view": 1},
+  {"fieldname": "photo", "fieldtype": "Attach Image", "label": "Photo"},
+  {"fieldname": "bio", "fieldtype": "Small Text", "label": "Bio"},
+  {"fieldname": "skills", "fieldtype": "Small Text", "label": "Skills (comma separated)"}
+ ],
+ "links": [],
+ "modified": "2026-04-01 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Salon App",
+ "name": "Salon Stylist",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Salon Owner", "read": 1, "write": 1, "create": 1, "delete": 1},
+  {"role": "Guest", "read": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}
