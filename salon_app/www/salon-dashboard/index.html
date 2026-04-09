@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Salon Dashboard | Luminescent Atelier</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#14F1B1;--b:#114EFF;--men:#114EFF;--women:#db2777;--unisex:#14F1B1;--dark:#030e1f;--card:#0b1a2e;--card2:#102036;--border:rgba(61,72,92,.4);--text:#dae6fe;--muted:#a0abc2;--grad:linear-gradient(90deg,#14F1B1,#114EFF)}
+body{font-family:'Manrope',sans-serif;background:var(--dark);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(150deg,#030e1f,#060f20);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:rgba(11,26,46,.9);border:1px solid rgba(20,241,177,.15);border-radius:20px;padding:44px 36px;width:100%;max-width:400px;text-align:center}
+.login-box h2{font-family:'Noto Serif',serif;font-size:1.8em;margin-bottom:4px}
+.login-box p{color:var(--muted);font-size:.84em;margin-bottom:28px}
+.l-err{display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;padding:10px;border-radius:8px;font-size:.8em;margin-bottom:12px}
+.l-inp{width:100%;padding:11px 14px;background:rgba(3,14,31,.7);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.9em;outline:none;margin-bottom:10px;transition:border-color .2s}
+.l-inp:focus{border-color:var(--p)}
+.l-btn{width:100%;padding:13px;background:var(--grad);color:#003;border:none;border-radius:8px;font-family:'Manrope',sans-serif;font-weight:800;font-size:.92em;cursor:pointer;margin-top:4px;transition:opacity .2s}
+.l-btn:hover{opacity:.9}
+.portal-links{display:flex;gap:12px;justify-content:center;margin-top:16px}
+.portal-links a{color:var(--muted);font-size:.78em;text-decoration:none;transition:color .2s}
+.portal-links a:hover{color:var(--p)}
+/* SIDEBAR */
+.sidebar{width:220px;background:#060f1e;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:200;overflow-y:auto}
+.sb-brand{padding:18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{font-family:'Noto Serif',serif;font-size:1.05em;color:var(--text);text-decoration:none}
+.sb-sub{font-size:.65em;color:var(--muted);margin-top:2px;letter-spacing:.5px}
+.sb-nav{flex:1;padding:10px 8px}
+.sb-sec{font-size:.6em;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 12px 4px;font-weight:700}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:.82em;font-weight:500;transition:all .2s;margin-bottom:1px;cursor:pointer;border:none;background:none;width:100%;font-family:'Manrope',sans-serif}
+.sb-link:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.sb-link.active{background:rgba(20,241,177,.08);color:var(--p)}
+.sb-link .material-symbols-outlined{font-size:18px}
+.sb-badge{margin-left:auto;background:var(--women);color:white;font-size:.6em;padding:2px 6px;border-radius:10px;font-weight:700}
+/* FILTER */
+.sb-filter{padding:10px;border-top:1px solid var(--border)}
+.flbl{font-size:.62em;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;font-weight:700}
+.fbtns{display:flex;flex-direction:column;gap:3px}
+.fb{padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.78em;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .2s;text-align:left;width:100%}
+.fb:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
+.fb.all.on{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.2);color:var(--text)}
+.fb.men.on{background:rgba(17,78,255,.12);border-color:rgba(17,78,255,.4);color:#6B9FFF}
+.fb.women.on{background:rgba(219,39,119,.12);border-color:rgba(219,39,119,.4);color:#f9a8d4}
+.fb.unisex.on{background:rgba(20,241,177,.1);border-color:rgba(20,241,177,.35);color:var(--p)}
+/* SIDEBAR USER */
+.sb-user{padding:10px;border-top:1px solid var(--border)}
+.u-info{display:flex;align-items:center;gap:8px}
+.u-av{width:30px;height:30px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.75em;font-weight:700;color:#003}
+.u-name{font-size:.8em;font-weight:600}
+.u-role{font-size:.7em;color:var(--muted)}
+.lg-btn{margin-top:7px;width:100%;padding:6px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;border-radius:6px;cursor:pointer;font-size:.75em;font-family:'Manrope',sans-serif;transition:all .2s}
+.lg-btn:hover{background:rgba(239,68,68,.15)}
+/* MAIN */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.topbar{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#060f1e;position:sticky;top:0;z-index:100}
+.pg-title{font-family:'Noto Serif',serif;font-size:1.2em;font-weight:700}
+.pg-sub{font-size:.75em;color:var(--muted);margin-top:1px}
+.tb-acts{display:flex;gap:8px}
+.tb-btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-size:.8em;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .2s}
+.tb-btn:hover{background:rgba(255,255,255,.07)}
+.tb-btn.pri{background:var(--grad);color:#003;border:none;font-weight:700}
+/* CONTENT */
+.content{padding:20px 24px;flex:1}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.all::before{background:var(--grad)}
+.stat-card.men::before{background:var(--men)}
+.stat-card.women::before{background:var(--women)}
+.stat-card.unisex::before{background:var(--unisex)}
+.stat-ico{font-size:1.4em;margin-bottom:10px}
+.stat-val{font-family:'Noto Serif',serif;font-size:1.8em;font-weight:900;margin-bottom:3px}
+.stat-lbl{font-size:.74em;color:var(--muted)}
+/* PANES */
+.pane{display:none}.pane.on{display:block}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.sec-ttl{font-family:'Noto Serif',serif;font-size:1.15em;font-weight:700}
+.ftabs{display:flex;gap:6px}
+.ftab{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.78em;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .2s}
+.ftab:hover{border-color:rgba(255,255,255,.2);color:var(--text)}
+.ftab.on{background:rgba(20,241,177,.1);border-color:var(--p);color:var(--p)}
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.dt th{padding:10px 14px;text-align:left;font-size:.7em;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.dt td{padding:10px 14px;font-size:.82em;border-bottom:1px solid rgba(255,255,255,.04)}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:.7em;font-weight:700}
+.b-men{background:rgba(17,78,255,.15);color:#6B9FFF;border:1px solid rgba(17,78,255,.2)}
+.b-women{background:rgba(219,39,119,.15);color:#f9a8d4;border:1px solid rgba(219,39,119,.2)}
+.b-unisex{background:rgba(20,241,177,.1);color:var(--p);border:1px solid rgba(20,241,177,.2)}
+.b-booked{background:rgba(251,191,36,.1);color:#fcd34d;border:1px solid rgba(251,191,36,.2)}
+.b-confirmed{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.b-completed{background:rgba(99,102,241,.1);color:#a78bfa;border:1px solid rgba(99,102,241,.2)}
+.b-cancelled{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.b-inprogress{background:rgba(245,158,11,.1);color:#fbbf24;border:1px solid rgba(245,158,11,.2)}
+.b-unpaid{background:rgba(239,68,68,.1);color:#f87171}
+.b-paid{background:rgba(34,197,94,.1);color:#4ade80}
+.st-sel{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:6px;font-size:.76em;font-family:'Manrope',sans-serif;cursor:pointer;outline:none}
+.st-sel:focus{border-color:var(--p)}
+.act-btn{padding:3px 9px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.72em;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .2s;margin-right:3px}
+.act-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.act-btn.wa{border-color:rgba(37,211,102,.3);color:#4ade80}
+.act-btn.wa:hover{background:rgba(37,211,102,.08)}
+.empty{text-align:center;padding:44px;color:var(--muted);font-size:.88em}
+/* MODAL */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center}
+.modal-ov.show{display:flex}
+.modal{background:#0d1528;border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal h3{font-family:'Noto Serif',serif;font-size:1.3em;margin-bottom:18px}
+.m-fg{margin-bottom:12px}
+.m-fg label{display:block;font-size:.7em;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.m-fg input,.m-fg select,.m-fg textarea{width:100%;padding:9px 12px;background:rgba(255,255,255,.04);border:1.5px solid var(--border);border-radius:7px;color:var(--text);font-family:'Manrope',sans-serif;font-size:.86em;outline:none;transition:border-color .2s}
+.m-fg input:focus,.m-fg select:focus{border-color:var(--p)}
+.m-fg select option{background:#0d1528}
+.m-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m-acts{display:flex;gap:8px;margin-top:16px}
+.m-acts button{flex:1;padding:11px;border-radius:8px;font-family:'Manrope',sans-serif;font-weight:700;font-size:.86em;cursor:pointer;transition:all .2s}
+.m-save{background:var(--grad);color:#003;border:none}
+.m-save:hover{opacity:.9}
+.m-cancel{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted)}
+.m-cancel:hover{background:rgba(255,255,255,.08)}
+/* WA POPUP */
+.wa-pop{position:fixed;bottom:24px;right:24px;background:#0d1528;border:2px solid #25d366;border-radius:14px;padding:18px 20px;z-index:9999;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.6);font-family:'Manrope',sans-serif;display:none}
+.wa-pop h4{color:var(--text);font-size:.88em;font-weight:700;margin-bottom:4px}
+.wa-pop p{color:var(--muted);font-size:.76em;margin-bottom:12px}
+.wa-pop-btns{display:flex;gap:8px}
+.wa-pop-btns a{flex:1;background:#25d366;color:white;padding:8px;border-radius:7px;text-align:center;font-size:.8em;font-weight:700;text-decoration:none}
+.wa-pop-btns button{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted);padding:8px;border-radius:7px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:.8em}
+/* PENDING */
+.pending-bar{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:10px;padding:14px 16px;margin-bottom:18px}
+.pending-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pending-hdr h4{color:#fcd34d;font-size:.84em;font-weight:700}
+.pc{background:rgba(251,191,36,.2);color:#fcd34d;font-size:.68em;padding:2px 7px;border-radius:10px;font-weight:700}
+.p-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(251,191,36,.1)}
+.p-item:last-child{border-bottom:none}
+.p-item b{color:var(--text);font-size:.82em}
+.p-item span{color:var(--muted);font-size:.76em}
+.sync-btn{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.25);color:#fcd34d;font-size:.72em;padding:3px 10px;border-radius:5px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600}
+@media(max-width:900px){.sidebar{width:0;overflow:hidden}.main{margin-left:0}.stats-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div style="font-size:2em;margin-bottom:8px">✂</div>
+    <h2>Salon Dashboard</h2>
+    <p>Luminescent Atelier — Owner Login</p>
+    <div class="l-err" id="lErr"></div>
+    <input class="l-inp" id="lEmail" type="email" placeholder="admin@salon.com">
+    <input class="l-inp" id="lPass" type="password" placeholder="Password">
+    <button class="l-btn" onclick="doLogin()">Login to Dashboard</button>
+    <div class="portal-links">
+      <a href="/men">💈 Men</a>
+      <a href="/women">💄 Women</a>
+      <a href="/unisex">✨ Unisex</a>
+      <a href="/owner">🌸 Beauty</a>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-brand">
+    <a href="/" class="sb-logo">✂ Salon App</a>
+    <div class="sb-sub">Owner Dashboard</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <button class="sb-link active" onclick="nav('dashboard',this)"><span class="material-symbols-outlined">dashboard</span>Dashboard</button>
+    <button class="sb-link" onclick="nav('appointments',this)"><span class="material-symbols-outlined">calendar_month</span>Appointments<span class="sb-badge" id="apptBadge">0</span></button>
+    <button class="sb-link" onclick="nav('customers',this)"><span class="material-symbols-outlined">person</span>Customers</button>
+    <div class="sb-sec">Business</div>
+    <button class="sb-link" onclick="nav('services',this)"><span class="material-symbols-outlined">content_cut</span>Services</button>
+    <button class="sb-link" onclick="nav('staff',this)"><span class="material-symbols-outlined">groups</span>Staff</button>
+    <button class="sb-link" onclick="nav('billing',this)"><span class="material-symbols-outlined">payments</span>Billing</button>
+    <button class="sb-link" onclick="nav('packages',this)"><span class="material-symbols-outlined">auto_awesome</span>Packages</button>
+    <div class="sb-sec">Portals</div>
+    <button class="sb-link" onclick="window.open('/men','_blank')"><span class="material-symbols-outlined">open_in_new</span>💈 Men Portal</button>
+    <button class="sb-link" onclick="window.open('/women','_blank')"><span class="material-symbols-outlined">open_in_new</span>💄 Women Portal</button>
+    <button class="sb-link" onclick="window.open('/unisex','_blank')"><span class="material-symbols-outlined">open_in_new</span>✨ Unisex Portal</button>
+    <button class="sb-link" onclick="window.open('/owner','_blank')"><span class="material-symbols-outlined">open_in_new</span>🌸 Beauty Parlor</button>
+  </div>
+  <div class="sb-filter">
+    <div class="flbl">Filter by Salon</div>
+    <div class="fbtns">
+      <button class="fb all on" onclick="setFilter('all',this)">🏪 All Salons</button>
+      <button class="fb men" onclick="setFilter('Men',this)">💈 Men Only</button>
+      <button class="fb women" onclick="setFilter('Women',this)">💄 Women Only</button>
+      <button class="fb unisex" onclick="setFilter('Unisex',this)">✨ Unisex Only</button>
+    </div>
+  </div>
+  <div class="sb-user">
+    <div class="u-info">
+      <div class="u-av">S</div>
+      <div><div class="u-name" id="uName">Owner</div><div class="u-role">Salon Admin</div></div>
+    </div>
+    <button class="lg-btn" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div><div class="pg-title" id="pgTitle">Dashboard</div><div class="pg-sub" id="pgSub">Salon Overview</div></div>
+    <div class="tb-acts">
+      <button class="tb-btn" onclick="loadCurrent()">↻ Refresh</button>
+      <button class="tb-btn pri" onclick="openModal('appointment')">+ New Booking</button>
+    </div>
+  </div>
+  <div class="content">
+    <!-- PENDING -->
+    <div class="pending-bar" id="pendingBar" style="display:none">
+      <div class="pending-hdr"><h4>⚠ Unsynced portal bookings</h4><span class="pc" id="pendingCnt">0</span></div>
+      <div id="pendingList"></div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="pane on" id="pane-dashboard">
+      <div class="stats-row">
+        <div class="stat-card all"><div class="stat-ico">📅</div><div class="stat-val" id="stTotal">0</div><div class="stat-lbl">Today Total</div></div>
+        <div class="stat-card men"><div class="stat-ico">💈</div><div class="stat-val" id="stMen">0</div><div class="stat-lbl">Men's Today</div></div>
+        <div class="stat-card women"><div class="stat-ico">💄</div><div class="stat-val" id="stWomen">0</div><div class="stat-lbl">Women's Today</div></div>
+        <div class="stat-card unisex"><div class="stat-ico">✨</div><div class="stat-val" id="stUnisex">0</div><div class="stat-lbl">Unisex Today</div></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card all"><div class="stat-ico">💰</div><div class="stat-val" id="stRev">₹0</div><div class="stat-lbl">Total Revenue</div></div>
+        <div class="stat-card all"><div class="stat-ico">👤</div><div class="stat-val" id="stCust">0</div><div class="stat-lbl">Total Customers</div></div>
+        <div class="stat-card all"><div class="stat-ico">✂</div><div class="stat-val" id="stSvc">0</div><div class="stat-lbl">Active Services</div></div>
+        <div class="stat-card all"><div class="stat-ico">👥</div><div class="stat-val" id="stStaff">0</div><div class="stat-lbl">Active Staff</div></div>
+      </div>
+      <!-- Salon breakdown cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px">
+        <div style="background:rgba(17,78,255,.08);border:1px solid rgba(17,78,255,.3);border-radius:12px;padding:20px;text-align:center;cursor:pointer" onclick="setFilterAndNav('Men')">
+          <div style="font-size:2em;margin-bottom:8px">💈</div>
+          <div style="font-family:'Noto Serif',serif;font-size:1.5em;font-weight:900;color:#6B9FFF" id="dMen">0</div>
+          <div style="font-size:.78em;color:var(--muted)">Men's Appointments Today</div>
+          <div style="margin-top:10px;font-size:.75em;color:#6B9FFF;font-weight:600">View Men's Dashboard →</div>
+        </div>
+        <div style="background:rgba(219,39,119,.08);border:1px solid rgba(219,39,119,.3);border-radius:12px;padding:20px;text-align:center;cursor:pointer" onclick="setFilterAndNav('Women')">
+          <div style="font-size:2em;margin-bottom:8px">💄</div>
+          <div style="font-family:'Noto Serif',serif;font-size:1.5em;font-weight:900;color:#f9a8d4" id="dWomen">0</div>
+          <div style="font-size:.78em;color:var(--muted)">Women's Appointments Today</div>
+          <div style="margin-top:10px;font-size:.75em;color:#f9a8d4;font-weight:600">View Women's Dashboard →</div>
+        </div>
+        <div style="background:rgba(20,241,177,.06);border:1px solid rgba(20,241,177,.25);border-radius:12px;padding:20px;text-align:center;cursor:pointer" onclick="setFilterAndNav('Unisex')">
+          <div style="font-size:2em;margin-bottom:8px">✨</div>
+          <div style="font-family:'Noto Serif',serif;font-size:1.5em;font-weight:900;color:var(--p)" id="dUnisex">0</div>
+          <div style="font-size:.78em;color:var(--muted)">Unisex Appointments Today</div>
+          <div style="margin-top:10px;font-size:.75em;color:var(--p);font-weight:600">View Unisex Dashboard →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div class="pane" id="pane-appointments">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Appointments</div>
+        <div class="ftabs">
+          <button class="ftab on" onclick="filterAppts('all',this)">All</button>
+          <button class="ftab" onclick="filterAppts('Booked',this)">Booked</button>
+          <button class="ftab" onclick="filterAppts('Confirmed',this)">Confirmed</button>
+          <button class="ftab" onclick="filterAppts('Completed',this)">Completed</button>
+        </div>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Customer</th><th>Salon</th><th>Service</th><th>Stylist</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="apptBody"><tr><td colspan="8"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div class="pane" id="pane-customers">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Customers</div>
+        <button class="tb-btn pri" onclick="openModal('customer')">+ Add</button>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Name</th><th>Phone</th><th>Gender</th><th>Preferred Salon</th><th>Visits</th><th>Actions</th></tr></thead>
+        <tbody id="custBody"><tr><td colspan="6"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="pane" id="pane-services">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Services</div>
+        <button class="tb-btn pri" onclick="openModal('service')">+ Add Service</button>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Service</th><th>Salon Type</th><th>Category</th><th>Price</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="svcBody"><tr><td colspan="7"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- STAFF -->
+    <div class="pane" id="pane-staff">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Staff</div>
+        <button class="tb-btn pri" onclick="openModal('staff')">+ Add Staff</button>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Name</th><th>Works For</th><th>Role</th><th>Specialization</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="staffBody"><tr><td colspan="7"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- BILLING -->
+    <div class="pane" id="pane-billing">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Invoices</div>
+        <button class="tb-btn pri" onclick="openModal('invoice')">+ New Invoice</button>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Customer</th><th>Salon</th><th>Service</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="billBody"><tr><td colspan="7"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- PACKAGES -->
+    <div class="pane" id="pane-packages">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Packages</div>
+        <button class="tb-btn pri" onclick="openModal('package')">+ Add Package</button>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Package</th><th>Salon Type</th><th>Price</th><th>Validity</th><th>Discount</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="pkgBody"><tr><td colspan="7"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modalOv">
+  <div class="modal">
+    <h3 id="modalTitle">New Record</h3>
+    <div id="modalBody"></div>
+    <div class="m-acts">
+      <button class="m-save" onclick="saveModal()">Save</button>
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- WA POPUP -->
+<div class="wa-pop" id="waPop">
+  <h4>📱 Send WhatsApp?</h4>
+  <p id="waPopMsg">Status updated for customer</p>
+  <div class="wa-pop-btns">
+    <a id="waPopLink" href="#" target="_blank" onclick="document.getElementById('waPop').style.display='none'">📲 Send</a>
+    <button onclick="document.getElementById('waPop').style.display='none'">Skip</button>
+  </div>
+</div>
+
+<script>
+const API = async (path, params={}) => {
+  const qs = Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+  const r = await fetch(`/api/resource/${path}${qs?'?'+qs:''}`,{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}});
+  return r.json();
+};
+const MAPI = async (method, data={}) => {
+  let csrf='fetch';
+  try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
+  const r = await fetch(`/api/method/${method}`,{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify(data)});
+  return r.json();
+};
+
+let curFilter='all', curPane='dashboard', allAppts=[];
+
+// ── LOGIN ──
+async function doLogin(){
+  const email=document.getElementById('lEmail').value;
+  const pass=document.getElementById('lPass').value;
+  const err=document.getElementById('lErr');
+  try{
+    let csrf='fetch';
+    try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
+    const r=await fetch('/api/method/login',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({usr:email,pwd:pass})});
+    const d=await r.json();
+    if(d.message==='Logged In'||r.ok){
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('uName').textContent=email.split('@')[0];
+      loadDashboard(); checkPending();
+    }else{err.textContent='Invalid credentials';err.style.display='block';}
+  }catch(e){err.textContent='Error: '+e.message;err.style.display='block';}
+}
+async function doLogout(){await fetch('/api/method/logout',{method:'POST'});location.reload();}
+document.getElementById('lPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// Auto-check login
+fetch('/api/method/frappe.auth.get_logged_user',{headers:{'Accept':'application/json'}}).then(r=>r.json()).then(d=>{
+  if(d.message&&d.message!=='Guest'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('uName').textContent=d.message;
+    loadDashboard(); checkPending();
+  }
+}).catch(()=>{});
+
+// ── NAV ──
+function nav(pane, btn){
+  document.querySelectorAll('.sb-link').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('pane-'+pane).classList.add('on');
+  curPane=pane;
+  const titles={dashboard:'Dashboard',appointments:'Appointments',customers:'Customers',services:'Services',staff:'Staff',billing:'Billing',packages:'Packages'};
+  document.getElementById('pgTitle').textContent=titles[pane]||pane;
+  loadCurrent();
+}
+function loadCurrent(){
+  const loaders={dashboard:loadDashboard,appointments:loadAppointments,customers:loadCustomers,services:loadServices,staff:loadStaff,billing:loadBilling,packages:loadPackages};
+  if(loaders[curPane])loaders[curPane]();
+}
+function setFilter(f,btn){
+  curFilter=f;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  loadCurrent();
+}
+function setFilterAndNav(type){
+  curFilter=type;
+  document.querySelectorAll('.fb').forEach(b=>{b.classList.remove('on');if(b.classList.contains(type.toLowerCase()))b.classList.add('on');});
+  nav('appointments',document.querySelector('.sb-link:nth-child(2)'));
+}
+
+// ── BADGES ──
+function salonBadge(t){const m={Men:'b-men',Women:'b-women',Unisex:'b-unisex'};return `<span class="badge ${m[t]||''}">${t||''}</span>`;}
+function statusBadge(s){const m={Booked:'b-booked',Confirmed:'b-confirmed',Completed:'b-completed',Cancelled:'b-cancelled','In Progress':'b-inprogress'};return `<span class="badge ${m[s]||'b-booked'}">${s||'Booked'}</span>`;}
+
+// ── DASHBOARD ──
+async function loadDashboard(){
+  try{
+    const r=await fetch('/api/method/salon_app.api.get_dashboard_stats'+(curFilter!=='all'?'?salon_type='+curFilter:''),{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}});
+    const d=await r.json(); const s=d.message||{};
+    document.getElementById('stTotal').textContent=s.today_total||0;
+    document.getElementById('stMen').textContent=s.today_men||0;
+    document.getElementById('stWomen').textContent=s.today_women||0;
+    document.getElementById('stUnisex').textContent=s.today_unisex||0;
+    document.getElementById('stRev').textContent='₹'+(s.month_revenue||0).toLocaleString('en-IN');
+    document.getElementById('stCust').textContent=s.total_customers||0;
+    document.getElementById('stSvc').textContent=s.total_services||0;
+    document.getElementById('stStaff').textContent=s.total_staff||0;
+    document.getElementById('dMen').textContent=s.today_men||0;
+    document.getElementById('dWomen').textContent=s.today_women||0;
+    document.getElementById('dUnisex').textContent=s.today_unisex||0;
+    // Update appointment badge
+    const apptF=[['appointment_date','=',new Date().toISOString().split('T')[0]],['status','in',['Booked','Confirmed']]];
+    const ac=await API('Salon Appointment?fields=["name"]&filters='+JSON.stringify(apptF)+'&limit=100');
+    document.getElementById('apptBadge').textContent=(ac.data||[]).length;
+  }catch(e){console.error(e);}
+}
+
+// ── APPOINTMENTS ──
+async function loadAppointments(){
+  let url='Salon Appointment?fields=["name","customer_name","customer_phone","salon_type","service","stylist","appointment_date","appointment_time","status"]&limit=200&order_by=appointment_date desc';
+  if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
+  const r=await API(url);
+  allAppts=r.data||[];
+  renderAppts(allAppts);
+}
+function filterAppts(status,btn){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderAppts(status==='all'?allAppts:allAppts.filter(a=>a.status===status));
+}
+function renderAppts(list){
+  const tb=document.getElementById('apptBody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="8"><div class="empty">No appointments found</div></td></tr>';return;}
+  tb.innerHTML=list.map(a=>`<tr>
+    <td><b>${a.customer_name||'—'}</b><br><span style="font-size:.74em;color:var(--muted)">${a.customer_phone||''}</span></td>
+    <td>${salonBadge(a.salon_type)}</td>
+    <td style="font-size:.82em">${a.service||'—'}</td>
+    <td style="font-size:.82em">${a.stylist||'—'}</td>
+    <td style="font-size:.82em">${a.appointment_date||'—'}</td>
+    <td style="font-size:.82em">${(a.appointment_time||'').slice(0,5)||'—'}</td>
+    <td>${statusBadge(a.status)}</td>
+    <td>
+      <select class="st-sel" onchange="updateStatus('${a.name}',this.value)">
+        ${['Booked','Confirmed','In Progress','Completed','Cancelled'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+      <button class="act-btn" onclick="window.open('/app/salon-appointment/${a.name}','_blank')">👁</button>
+    </td>
+  </tr>`).join('');
+}
+async function updateStatus(name,status){
+  try{
+    const r=await MAPI('salon_app.doctype.salon_appointment.salon_appointment.update_appointment_status',{appointment_name:name,new_status:status});
+    const res=r.message||{};
+    if(res.success){
+      toast('✓ Status updated to '+status);
+      loadAppointments();
+      if(res.wa_link){
+        document.getElementById('waPopMsg').textContent=(res.customer||'Customer')+' — '+status;
+        document.getElementById('waPopLink').href=res.wa_link;
+        const pop=document.getElementById('waPop');pop.style.display='block';
+        setTimeout(()=>pop.style.display='none',15000);
+      }
+    }else{toast('Update failed','err');}
+  }catch(e){toast('Error','err');}
+}
+
+// ── CUSTOMERS ──
+async function loadCustomers(){
+  let url='Salon Customer?fields=["name","full_name","phone","gender","salon_type","total_visits"]&limit=200';
+  if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
+  const r=await API(url);const list=r.data||[];
+  const tb=document.getElementById('custBody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">No customers yet</div></td></tr>';return;}
+  tb.innerHTML=list.map(c=>`<tr><td><b>${c.full_name||'—'}</b></td><td>${c.phone||'—'}</td><td>${c.gender||'—'}</td><td>${salonBadge(c.salon_type)}</td><td>${c.total_visits||0}</td><td><button class="act-btn" onclick="window.open('/app/salon-customer/${c.name}','_blank')">👁 View</button></td></tr>`).join('');
+}
+
+// ── SERVICES ──
+async function loadServices(){
+  let url='Salon Service?fields=["name","service_name","salon_type","category","price","duration_minutes","is_active"]&limit=200';
+  if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
+  const r=await API(url);const list=r.data||[];
+  const tb=document.getElementById('svcBody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No services. Add them in Frappe or use the + button.</div></td></tr>';return;}
+  tb.innerHTML=list.map(s=>`<tr><td><b>${s.service_name||'—'}</b></td><td>${salonBadge(s.salon_type)}</td><td>${s.category||'—'}</td><td>₹${Number(s.price||0).toLocaleString('en-IN')}</td><td>${s.duration_minutes||0} mins</td><td><span class="badge ${s.is_active?'b-confirmed':'b-cancelled'}">${s.is_active?'Active':'Inactive'}</span></td><td><button class="act-btn" onclick="window.open('/app/salon-service/${s.name}','_blank')">👁 View</button><button class="act-btn" onclick="window.open('/app/salon-service/${s.name}#edit','_blank')">✏ Edit</button></td></tr>`).join('');
+}
+
+// ── STAFF ──
+async function loadStaff(){
+  let url='Salon Staff?fields=["name","staff_name","salon_type","role","specialization","phone","experience_years","is_active"]&limit=100';
+  if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
+  const r=await API(url);const list=r.data||[];
+  const tb=document.getElementById('staffBody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No staff. Add them!</div></td></tr>';return;}
+  tb.innerHTML=list.map(s=>`<tr><td><b>${s.staff_name||'—'}</b></td><td>${salonBadge(s.salon_type)}</td><td>${s.role||'—'}</td><td>${s.specialization||'—'}</td><td>${s.phone||'—'}</td><td><span class="badge ${s.is_active?'b-confirmed':'b-cancelled'}">${s.is_active?'Active':'Inactive'}</span></td><td><button class="act-btn" onclick="window.open('/app/salon-staff/${s.name}','_blank')">👁</button><button class="act-btn" onclick="window.open('/app/salon-staff/${s.name}#edit','_blank')">✏</button></td></tr>`).join('');
+}
+
+// ── BILLING ──
+async function loadBilling(){
+  let url='Salon Invoice?fields=["name","customer_name","salon_type","service","invoice_date","grand_total","payment_status"]&limit=200&order_by=invoice_date desc';
+  if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
+  const r=await API(url);const list=r.data||[];
+  const tb=document.getElementById('billBody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No invoices yet</div></td></tr>';return;}
+  tb.innerHTML=list.map(i=>`<tr><td><b>${i.customer_name||'—'}</b></td><td>${salonBadge(i.salon_type)}</td><td>${i.service||'—'}</td><td>${i.invoice_date||'—'}</td><td>₹${Number(i.grand_total||0).toLocaleString('en-IN')}</td><td><span class="badge ${i.payment_status==='Paid'?'b-paid':'b-unpaid'}">${i.payment_status||'Unpaid'}</span></td><td><button class="act-btn" onclick="window.open('/app/salon-invoice/${i.name}','_blank')">👁</button><button class="act-btn" onclick="markPaid('${i.name}')">✓ Paid</button></td></tr>`).join('');
+}
+async function markPaid(name){
+  let csrf='fetch';try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
+  await fetch(`/api/resource/Salon Invoice/${name}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({payment_status:'Paid',payment_method:'Cash'})});
+  toast('✓ Marked as Paid');loadBilling();
+}
+
+// ── PACKAGES ──
+async function loadPackages(){
+  let url='Salon Package?fields=["name","package_name","salon_type","price","validity_days","discount_percent","is_active"]&limit=100';
+  if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
+  const r=await API(url);const list=r.data||[];
+  const tb=document.getElementById('pkgBody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No packages. Add them!</div></td></tr>';return;}
+  tb.innerHTML=list.map(p=>`<tr><td><b>${p.package_name||'—'}</b></td><td>${salonBadge(p.salon_type)}</td><td>₹${Number(p.price||0).toLocaleString('en-IN')}</td><td>${p.validity_days||0} days</td><td>${p.discount_percent||0}%</td><td><span class="badge ${p.is_active?'b-confirmed':'b-cancelled'}">${p.is_active?'Active':'Inactive'}</span></td><td><button class="act-btn" onclick="window.open('/app/salon-package/${p.name}','_blank')">👁</button><button class="act-btn" onclick="window.open('/app/salon-package/${p.name}#edit','_blank')">✏</button></td></tr>`).join('');
+}
+
+// ── MODAL ──
+let modalType='';
+function openModal(type){
+  modalType=type;
+  const titles={appointment:'New Appointment',customer:'Add Customer',service:'Add Service',staff:'Add Staff',invoice:'New Invoice',package:'Add Package'};
+  document.getElementById('modalTitle').textContent=titles[type]||'New';
+  const today=new Date().toISOString().split('T')[0];
+  const bodies={
+    appointment:`<div class="m-row"><div class="m-fg"><label>Customer Name *</label><input id="mc-cn" placeholder="Full name"></div><div class="m-fg"><label>Phone *</label><input id="mc-ph" type="tel" placeholder="10-digit mobile"></div></div><div class="m-row"><div class="m-fg"><label>Salon Type *</label><select id="mc-st"><option>Men</option><option>Women</option><option>Unisex</option></select></div><div class="m-fg"><label>Service *</label><select id="mc-svc"><option value="">Loading...</option></select></div></div><div class="m-row"><div class="m-fg"><label>Date *</label><input id="mc-dt" type="date" value="${today}"></div><div class="m-fg"><label>Time *</label><select id="mc-tm"><option value="09:00:00">9 AM</option><option value="10:00:00">10 AM</option><option value="11:00:00">11 AM</option><option value="12:00:00">12 PM</option><option value="13:00:00">1 PM</option><option value="14:00:00">2 PM</option><option value="15:00:00">3 PM</option><option value="16:00:00">4 PM</option><option value="17:00:00">5 PM</option><option value="18:00:00">6 PM</option></select></div></div><div class="m-fg"><label>Stylist</label><select id="mc-styl"><option value="">Any available</option></select></div>`,
+    customer:`<div class="m-row"><div class="m-fg"><label>Full Name *</label><input id="mc-fn" placeholder="Full name"></div><div class="m-fg"><label>Phone *</label><input id="mc-ph" type="tel" placeholder="Mobile"></div></div><div class="m-row"><div class="m-fg"><label>Gender</label><select id="mc-gn"><option>Male</option><option>Female</option><option>Other</option></select></div><div class="m-fg"><label>Preferred Salon</label><select id="mc-st"><option>Men</option><option>Women</option><option>Unisex</option></select></div></div>`,
+    service:`<div class="m-fg"><label>Service Name *</label><input id="mc-sn" placeholder="e.g. Men Haircut"></div><div class="m-row"><div class="m-fg"><label>Salon Type *</label><select id="mc-st"><option>Men</option><option>Women</option><option>Unisex</option></select></div><div class="m-fg"><label>Category</label><input id="mc-cat" placeholder="e.g. Haircut"></div></div><div class="m-row"><div class="m-fg"><label>Price *</label><input id="mc-pr" type="number" placeholder="150"></div><div class="m-fg"><label>Duration (mins) *</label><input id="mc-dur" type="number" placeholder="30"></div></div>`,
+    staff:`<div class="m-fg"><label>Staff Name *</label><input id="mc-fn" placeholder="Full name"></div><div class="m-row"><div class="m-fg"><label>Works For *</label><select id="mc-st"><option>Men</option><option>Women</option><option>Unisex</option></select></div><div class="m-fg"><label>Role</label><select id="mc-role"><option>Barber</option><option>Stylist</option><option>Nail Tech</option><option>Skin Therapist</option><option>Makeup Artist</option><option>Manager</option></select></div></div><div class="m-fg"><label>Phone *</label><input id="mc-ph" type="tel" placeholder="Mobile"></div><div class="m-fg"><label>Specialization</label><input id="mc-spec" placeholder="e.g. Hair Styling"></div>`,
+    invoice:`<div class="m-fg"><label>Customer Name *</label><input id="mc-cn" placeholder="Customer name"></div><div class="m-row"><div class="m-fg"><label>Salon Type</label><select id="mc-st"><option>Men</option><option>Women</option><option>Unisex</option></select></div><div class="m-fg"><label>Amount *</label><input id="mc-amt" type="number" placeholder="500"></div></div><div class="m-fg"><label>Payment Status</label><select id="mc-ps"><option>Unpaid</option><option>Paid</option></select></div>`,
+    package:`<div class="m-fg"><label>Package Name *</label><input id="mc-pn" placeholder="e.g. Quick Groom"></div><div class="m-row"><div class="m-fg"><label>Salon Type *</label><select id="mc-st"><option>Men</option><option>Women</option><option>Unisex</option></select></div><div class="m-fg"><label>Price *</label><input id="mc-pr" type="number" placeholder="999"></div></div><div class="m-fg"><label>Description</label><input id="mc-desc" placeholder="Package description"></div><div class="m-fg"><label>Services Included (one per line)</label><textarea id="mc-svcs" placeholder="Haircut&#10;Beard Trim&#10;Facial" style="min-height:70px"></textarea></div>`,
+  };
+  document.getElementById('modalBody').innerHTML=bodies[type]||'';
+  document.getElementById('modalOv').classList.add('show');
+  // Load services for appointment modal
+  if(type==='appointment'){
+    API('Salon Service?fields=["service_name","price","salon_type"]&filters=[["is_active","=",1]]&limit=100').then(r=>{
+      const sel=document.getElementById('mc-svc');
+      if(sel&&r.data){sel.innerHTML='<option value="">— Choose —</option>'+r.data.map(s=>`<option value="${s.service_name}">${s.service_name} ₹${s.price} (${s.salon_type})</option>`).join('');}
+    });
+    API('Salon Staff?fields=["staff_name","salon_type"]&filters=[["is_active","=",1]]&limit=50').then(r=>{
+      const sel=document.getElementById('mc-styl');
+      if(sel&&r.data){sel.innerHTML='<option value="">Any available</option>'+r.data.map(s=>`<option value="${s.staff_name}">${s.staff_name} (${s.salon_type})</option>`).join('');}
+    });
+  }
+}
+function closeModal(){document.getElementById('modalOv').classList.remove('show');}
+async function saveModal(){
+  let csrf='fetch';try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
+  const val=id=>(document.getElementById(id)||{}).value||'';
+  const today=new Date().toISOString().split('T')[0];
+  let doc={};
+  if(modalType==='appointment') doc={doctype:'Salon Appointment',customer_name:val('mc-cn'),customer_phone:val('mc-ph'),salon_type:val('mc-st'),service:val('mc-svc'),appointment_date:val('mc-dt')||today,appointment_time:val('mc-tm')||'10:00:00',stylist:val('mc-styl'),status:'Booked'};
+  else if(modalType==='customer') doc={doctype:'Salon Customer',full_name:val('mc-fn'),phone:val('mc-ph'),gender:val('mc-gn'),salon_type:val('mc-st')};
+  else if(modalType==='service') doc={doctype:'Salon Service',service_name:val('mc-sn'),salon_type:val('mc-st'),category:val('mc-cat'),price:val('mc-pr'),duration_minutes:val('mc-dur'),is_active:1};
+  else if(modalType==='staff') doc={doctype:'Salon Staff',staff_name:val('mc-fn'),salon_type:val('mc-st'),role:val('mc-role'),phone:val('mc-ph'),specialization:val('mc-spec'),is_active:1};
+  else if(modalType==='invoice') doc={doctype:'Salon Invoice',customer_name:val('mc-cn'),salon_type:val('mc-st'),grand_total:val('mc-amt'),subtotal:val('mc-amt'),payment_status:val('mc-ps'),invoice_date:today};
+  else if(modalType==='package') doc={doctype:'Salon Package',package_name:val('mc-pn'),salon_type:val('mc-st'),price:val('mc-pr'),description:val('mc-desc'),services_included:val('mc-svcs'),is_active:1};
+  try{
+    const r=await fetch('/api/method/frappe.client.insert',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({doc})});
+    const d=await r.json();
+    if(d.message&&d.message.name){toast('✓ Saved: '+d.message.name);closeModal();loadCurrent();}
+    else{toast('Save failed: '+(d.exc_type||'Error'),'err');}
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// ── PENDING PORTAL BOOKINGS ──
+function checkPending(){
+  const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
+  const unsaved=all.filter(b=>!b.synced);
+  const bar=document.getElementById('pendingBar');
+  document.getElementById('pendingCnt').textContent=unsaved.length;
+  bar.style.display=unsaved.length?'block':'none';
+  document.getElementById('pendingList').innerHTML=unsaved.map((b,i)=>`
+    <div class="p-item">
+      <div><b>${b.name}</b> <span>${b.service} (${b.salonType})</span> <span>📞${b.phone}</span></div>
+      <button class="sync-btn" onclick="syncOne(${i})">Save to Frappe</button>
+    </div>`).join('');
+}
+async function syncOne(idx){
+  const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
+  const b=all[idx];if(!b)return;
+  let csrf='fetch';try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
+  const r=await fetch('/api/method/frappe.client.insert',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({doc:{doctype:'Salon Appointment',customer_name:b.name,customer_phone:b.phone,salon_type:b.salonType||'Unisex',service:b.service,appointment_date:b.date,appointment_time:b.time||'10:00:00',status:'Booked',notes:'Via portal'}})});
+  const d=await r.json();
+  if(d.message&&d.message.name){all[idx].synced=true;localStorage.setItem('salon_bookings',JSON.stringify(all));toast('✓ Saved: '+d.message.name);checkPending();loadCurrent();}
+}
+
+// ── TOAST ──
+function toast(msg,type='ok',dur=3000){
+  let el=document.getElementById('toast-el');
+  if(!el){el=document.createElement('div');el.id='toast-el';el.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0d1528;color:white;padding:9px 20px;border-radius:30px;font-size:.82em;z-index:9999;transition:opacity .3s;font-family:Manrope,sans-serif;border:1px solid rgba(255,255,255,.1)';document.body.appendChild(el);}
+  el.textContent=msg;el.style.opacity='1';
+  setTimeout(()=>el.style.opacity='0',dur);
+}
+
+// ── REALTIME ──
+try{
+  const bc=new BroadcastChannel('salon_dashboard');
+  bc.onmessage=e=>{if(e.data.type==='new_booking'){toast('🔔 New booking: '+e.data.name+' — '+e.data.service);checkPending();}};
+}catch(e){}
+
+document.getElementById('modalOv').addEventListener('click',function(e){if(e.target===this)closeModal();});
+</script>
+</body>
+</html>

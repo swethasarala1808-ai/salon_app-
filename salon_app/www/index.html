@@ -1,123 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salon App — Choose Your Salon</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Luminescent Atelier | 3-in-1 Salon</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Manrope',sans-serif;background:#0a0a0a;color:white;min-height:100vh;overflow-x:hidden}
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(99,102,241,.15),transparent 70%)}
-.logo{font-family:'Noto Serif',serif;font-size:2.5em;font-weight:700;letter-spacing:3px;margin-bottom:12px;text-align:center}
+:root{--dark:#030e1f;--card:#0b1a2e;--border:rgba(61,72,92,.4);--text:#dae6fe;--muted:#a0abc2}
+body{font-family:'Manrope',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden}
+.bg-glow{position:absolute;border-radius:50%;pointer-events:none}
+.g1{top:-200px;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(17,78,255,.1),transparent 70%)}
+.g2{bottom:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(20,241,177,.06),transparent 70%)}
+.logo{font-family:'Noto Serif',serif;font-size:2.2em;font-weight:900;margin-bottom:6px;text-align:center}
 .logo span{background:linear-gradient(90deg,#14F1B1,#114EFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.subtitle{color:rgba(255,255,255,.5);font-size:.95em;margin-bottom:60px;text-align:center;letter-spacing:.5px}
-.choose-title{font-size:1.1em;color:rgba(255,255,255,.4);letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;text-align:center}
-.salon-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;width:100%}
-.salon-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:48px 32px;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;position:relative;overflow:hidden}
-.salon-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s}
-.salon-card:hover{transform:translateY(-8px);border-color:transparent}
-.salon-card.men::before{background:linear-gradient(135deg,rgba(17,78,255,.2),rgba(17,78,255,.05))}
-.salon-card.men:hover{box-shadow:0 24px 60px rgba(17,78,255,.25);border-color:rgba(17,78,255,.4)}
-.salon-card.women::before{background:linear-gradient(135deg,rgba(236,72,153,.2),rgba(236,72,153,.05))}
-.salon-card.women:hover{box-shadow:0 24px 60px rgba(236,72,153,.25);border-color:rgba(236,72,153,.4)}
-.salon-card.unisex::before{background:linear-gradient(135deg,rgba(20,241,177,.2),rgba(20,241,177,.05))}
-.salon-card.unisex:hover{box-shadow:0 24px 60px rgba(20,241,177,.25);border-color:rgba(20,241,177,.4)}
-.salon-card:hover::before{opacity:1}
-.card-icon{font-size:3.5em;margin-bottom:20px;display:block;position:relative;z-index:1}
-.card-title{font-family:'Noto Serif',serif;font-size:1.6em;margin-bottom:8px;position:relative;z-index:1}
-.salon-card.men .card-title{color:#6B9FFF}
-.salon-card.women .card-title{color:#F472B6}
-.salon-card.unisex .card-title{color:#14F1B1}
-.card-desc{font-size:.83em;color:rgba(255,255,255,.45);line-height:1.6;margin-bottom:24px;position:relative;z-index:1}
-.card-services{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;position:relative;z-index:1}
-.svc-tag{font-size:.72em;padding:4px 10px;border-radius:20px;font-weight:500}
-.men .svc-tag{background:rgba(17,78,255,.15);color:#6B9FFF;border:1px solid rgba(17,78,255,.2)}
-.women .svc-tag{background:rgba(236,72,153,.15);color:#F472B6;border:1px solid rgba(236,72,153,.2)}
-.unisex .svc-tag{background:rgba(20,241,177,.12);color:#14F1B1;border:1px solid rgba(20,241,177,.2)}
-.card-cta{display:block;margin-top:28px;padding:12px;border-radius:10px;font-weight:700;font-size:.85em;letter-spacing:.5px;position:relative;z-index:1;transition:opacity .2s}
-.men .card-cta{background:linear-gradient(90deg,#114EFF,#1a6fff);color:white}
-.women .card-cta{background:linear-gradient(90deg,#db2777,#f472b6);color:white}
-.unisex .card-cta{background:linear-gradient(90deg,#14F1B1,#114EFF);color:#0a0a0a}
-.card-cta:hover{opacity:.9}
-.owner-link{margin-top:48px;color:rgba(255,255,255,.3);font-size:.82em;text-decoration:none;transition:color .2s}
-.owner-link:hover{color:rgba(255,255,255,.6)}
-.stats{display:flex;gap:40px;margin-bottom:60px;flex-wrap:wrap;justify-content:center}
-.stat .n{font-family:'Noto Serif',serif;font-size:2em;background:linear-gradient(90deg,#14F1B1,#114EFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.stat .l{font-size:.78em;color:rgba(255,255,255,.35);margin-top:2px}
-@media(max-width:768px){.salon-cards{grid-template-columns:1fr;max-width:380px}.stats{gap:24px}}
+.sub{color:var(--muted);font-size:.88em;margin-bottom:50px;text-align:center;letter-spacing:.5px}
+.choose{font-size:.72em;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;text-align:center;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:860px;width:100%;margin-bottom:40px}
+.card{background:rgba(11,26,46,.6);border:1px solid var(--border);border-radius:20px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .3s;text-decoration:none;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-8px)}
+.card.men:hover{box-shadow:0 24px 60px rgba(17,78,255,.25);border-color:rgba(17,78,255,.5)}
+.card.men::before{background:linear-gradient(135deg,rgba(17,78,255,.15),transparent)}
+.card.women:hover{box-shadow:0 24px 60px rgba(244,114,182,.25);border-color:rgba(244,114,182,.5)}
+.card.women::before{background:linear-gradient(135deg,rgba(244,114,182,.15),transparent)}
+.card.unisex:hover{box-shadow:0 24px 60px rgba(20,241,177,.2);border-color:rgba(20,241,177,.4)}
+.card.unisex::before{background:linear-gradient(135deg,rgba(20,241,177,.12),transparent)}
+.card:hover::before{opacity:1}
+.card-ico{font-size:3em;margin-bottom:16px;display:block;position:relative;z-index:1}
+.card-title{font-family:'Noto Serif',serif;font-size:1.5em;margin-bottom:6px;position:relative;z-index:1;font-weight:700}
+.men .card-title{color:#6B9FFF}
+.women .card-title{color:#f9a8d4}
+.unisex .card-title{color:#14F1B1}
+.card-desc{font-size:.8em;color:var(--muted);line-height:1.6;margin-bottom:18px;position:relative;z-index:1}
+.tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:20px;position:relative;z-index:1}
+.tag{font-size:.68em;padding:3px 9px;border-radius:20px;font-weight:600}
+.men .tag{background:rgba(17,78,255,.15);color:#6B9FFF;border:1px solid rgba(17,78,255,.2)}
+.women .tag{background:rgba(244,114,182,.12);color:#f9a8d4;border:1px solid rgba(244,114,182,.2)}
+.unisex .tag{background:rgba(20,241,177,.1);color:#14F1B1;border:1px solid rgba(20,241,177,.2)}
+.card-btn{display:block;padding:11px;border-radius:10px;font-weight:700;font-size:.82em;position:relative;z-index:1;transition:opacity .2s;color:#003}
+.men .card-btn{background:linear-gradient(90deg,#114EFF,#6B9FFF)}
+.women .card-btn{background:linear-gradient(90deg,#db2777,#f472b6)}
+.unisex .card-btn{background:linear-gradient(90deg,#14F1B1,#0dc090)}
+.card-btn:hover{opacity:.9}
+.owner-links{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.owner-links a{color:var(--muted);font-size:.8em;text-decoration:none;transition:color .2s;padding:6px 14px;border:1px solid var(--border);border-radius:8px}
+.owner-links a:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+.stats{display:flex;gap:32px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+.stat .n{font-family:'Noto Serif',serif;font-size:2em;background:linear-gradient(90deg,#14F1B1,#114EFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;font-weight:900;text-align:center}
+.stat .l{font-size:.72em;color:var(--muted);text-align:center;letter-spacing:.5px}
+@media(max-width:700px){.cards{grid-template-columns:1fr;max-width:400px}}
 </style>
 </head>
 <body>
-<div class="hero">
-  <div class="logo">✂ <span>Salon App</span></div>
-  <p class="subtitle">3-in-1 Professional Salon Management</p>
+<div class="bg-glow g1"></div>
+<div class="bg-glow g2"></div>
 
-  <div class="stats">
-    <div class="stat"><div class="n" id="s-clients">500+</div><div class="l">Happy Clients</div></div>
-    <div class="stat"><div class="n" id="s-stylists">20+</div><div class="l">Expert Stylists</div></div>
-    <div class="stat"><div class="n" id="s-years">5 Yrs</div><div class="l">Experience</div></div>
-    <div class="stat"><div class="n">4.9 ★</div><div class="l">Google Rating</div></div>
-  </div>
+<div class="logo">✂ <span>Luminescent Atelier</span></div>
+<p class="sub">3-in-1 Premium Salon Management System</p>
 
-  <p class="choose-title">— Choose Your Salon —</p>
+<div class="stats">
+  <div class="stat"><span class="n" id="sc">500+</span><span class="l">Happy Clients</span></div>
+  <div class="stat"><span class="n" id="ss">7</span><span class="l">Expert Stylists</span></div>
+  <div class="stat"><span class="n">4.9★</span><span class="l">Rating</span></div>
+  <div class="stat"><span class="n" id="sv">35+</span><span class="l">Services</span></div>
+</div>
 
-  <div class="salon-cards">
-    <a href="/men" class="salon-card men">
-      <span class="card-icon">💈</span>
-      <div class="card-title">Men Salon</div>
-      <p class="card-desc">Expert grooming & styling for men. Quick, clean, professional.</p>
-      <div class="card-services">
-        <span class="svc-tag">Haircut</span>
-        <span class="svc-tag">Beard</span>
-        <span class="svc-tag">Shave</span>
-        <span class="svc-tag">Facial</span>
-        <span class="svc-tag">Color</span>
-      </div>
-      <span class="card-cta">Book Men's Appointment →</span>
-    </a>
+<p class="choose">— Choose Your Salon —</p>
 
-    <a href="/women" class="salon-card women">
-      <span class="card-icon">💇‍♀️</span>
-      <div class="card-title">Women Salon</div>
-      <p class="card-desc">Complete beauty services for women. Glamour & care combined.</p>
-      <div class="card-services">
-        <span class="svc-tag">Hair Styling</span>
-        <span class="svc-tag">Facial</span>
-        <span class="svc-tag">Waxing</span>
-        <span class="svc-tag">Makeup</span>
-        <span class="svc-tag">Bridal</span>
-      </div>
-      <span class="card-cta">Book Women's Appointment →</span>
-    </a>
+<div class="cards">
+  <a href="/men" class="card men">
+    <span class="card-ico">💈</span>
+    <div class="card-title">Men's Salon</div>
+    <p class="card-desc">Expert grooming for men. Quick, clean, professional.</p>
+    <div class="tags">
+      <span class="tag">Haircut</span><span class="tag">Beard</span>
+      <span class="tag">Shave</span><span class="tag">Facial</span>
+    </div>
+    <span class="card-btn">Book Men's Appointment →</span>
+  </a>
+  <a href="/women" class="card women">
+    <span class="card-ico">💇‍♀️</span>
+    <div class="card-title">Women's Salon</div>
+    <p class="card-desc">Complete beauty for women. Glamour & care combined.</p>
+    <div class="tags">
+      <span class="tag">Hair</span><span class="tag">Facial</span>
+      <span class="tag">Waxing</span><span class="tag">Bridal</span>
+    </div>
+    <span class="card-btn">Book Women's Appointment →</span>
+  </a>
+  <a href="/unisex" class="card unisex">
+    <span class="card-ico">✨</span>
+    <div class="card-title">Unisex Salon</div>
+    <p class="card-desc">All services for everyone. Spa, keratin, massage & more.</p>
+    <div class="tags">
+      <span class="tag">Hair Spa</span><span class="tag">Keratin</span>
+      <span class="tag">Massage</span><span class="tag">Color</span>
+    </div>
+    <span class="card-btn">Book Unisex Appointment →</span>
+  </a>
+</div>
 
-    <a href="/unisex" class="salon-card unisex">
-      <span class="card-icon">✨</span>
-      <div class="card-title">Unisex Salon</div>
-      <p class="card-desc">All services for everyone. Hair spa, keratin, massage & more.</p>
-      <div class="card-services">
-        <span class="svc-tag">Hair Spa</span>
-        <span class="svc-tag">Keratin</span>
-        <span class="svc-tag">Massage</span>
-        <span class="svc-tag">Packages</span>
-      </div>
-      <span class="card-cta">Book Unisex Appointment →</span>
-    </a>
-  </div>
-
-  <a href="/salon-owner" class="owner-link" style="margin-top:48px">⚙ Staff / Owner Login</a>
+<div class="owner-links">
+  <a href="/salon-dashboard">📊 Salon Dashboard</a>
+  <a href="/bizaxl">💄 Beauty Parlor</a>
+  <a href="/owner">⚙ Beauty Owner</a>
 </div>
 
 <script>
-async function loadStats() {
-  try {
-    const r = await fetch('/api/method/salon_app.salon_app.api.get_settings');
-    const d = await r.json();
-    const s = d.message || {};
-    if (s.total_clients) document.getElementById('s-clients').textContent = s.total_clients + '+';
-    if (s.experience_years) document.getElementById('s-years').textContent = s.experience_years + ' Yrs';
-  } catch(e) {}
+async function loadStats(){
+  try{
+    const r=await fetch('/api/method/salon_app.api.get_settings',{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}});
+    const d=await r.json();const s=d.message||{};
+    if(s.total_clients)document.getElementById('sc').textContent=s.total_clients+'+';
+    if(s.experience_years)document.getElementById('ss').textContent=s.experience_years+' Yrs';
+  }catch(e){}
 }
 loadStats();
 </script>

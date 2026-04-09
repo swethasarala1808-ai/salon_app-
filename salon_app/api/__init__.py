@@ -1,138 +1,81 @@
 import frappe
-import urllib.parse
 from frappe.utils import nowdate, flt
+import urllib.parse
 
 
 @frappe.whitelist(allow_guest=True)
-def get_services(gender_type=None):
-    filters = [["is_active", "=", 1]]
-    if gender_type and gender_type != "All":
-        filters.append(["gender_type", "in", [gender_type, "Unisex"]])
-    services = frappe.get_list(
-        "Salon Service",
-        fields=["name", "service_name", "category", "gender_type", "price", "duration_minutes", "description", "image"],
-        filters=filters,
-        order_by="category asc, price asc",
-        limit=100
-    )
-    return services
+def get_services(salon_type=None):
+    filters = {"is_active": 1}
+    if salon_type and salon_type != "All":
+        filters["salon_type"] = salon_type
+    try:
+        return frappe.get_all("Salon Service",
+            fields=["name","service_name","salon_type","category","price","duration_minutes","description"],
+            filters=filters, order_by="category asc, price asc", limit=100)
+    except Exception:
+        return []
 
 
 @frappe.whitelist(allow_guest=True)
-def get_stylists(gender_type=None):
-    filters = [["is_active", "=", 1]]
-    if gender_type and gender_type != "All":
-        filters.append(["gender_type", "in", [gender_type, "Unisex"]])
-    stylists = frappe.get_list(
-        "Salon Stylist",
-        fields=["name", "full_name", "gender_type", "specialization", "experience_years", "photo", "bio", "skills"],
-        filters=filters,
-        limit=50
-    )
-    return stylists
+def get_staff(salon_type=None):
+    filters = {"is_active": 1}
+    if salon_type and salon_type != "All":
+        filters["salon_type"] = salon_type
+    try:
+        return frappe.get_all("Salon Staff",
+            fields=["name","staff_name","salon_type","role","specialization","experience_years","photo"],
+            filters=filters, limit=50)
+    except Exception:
+        return []
 
 
 @frappe.whitelist(allow_guest=True)
-def get_packages(gender_type=None):
-    filters = [["is_active", "=", 1]]
-    if gender_type and gender_type != "All":
-        filters.append(["gender_type", "in", [gender_type, "Unisex"]])
-    packages = frappe.get_list(
-        "Salon Package",
-        fields=["name", "package_name", "gender_type", "price", "validity_days", "discount_percent", "description", "services_included"],
-        filters=filters,
-        limit=30
-    )
-    return packages
+def get_packages(salon_type=None):
+    filters = {"is_active": 1}
+    if salon_type and salon_type != "All":
+        filters["salon_type"] = salon_type
+    try:
+        return frappe.get_all("Salon Package",
+            fields=["name","package_name","salon_type","price","validity_days","discount_percent","description","services_included"],
+            filters=filters, limit=30)
+    except Exception:
+        return []
 
 
 @frappe.whitelist(allow_guest=True)
 def get_settings():
     try:
-        doc = frappe.get_doc("Salon Settings", "Salon Settings")
-        return {
-            "salon_name": doc.salon_name or "Salon App",
-            "tagline": doc.tagline or "",
-            "salon_type": doc.salon_type or "Unisex",
-            "phone": doc.phone or "",
-            "email": doc.email or "",
-            "address": doc.address or "",
-            "hours": doc.hours or "9 AM - 8 PM",
-            "upi_id": doc.upi_id or "",
-            "google_rating": doc.google_rating or 4.9,
-            "total_clients": doc.total_clients or 0,
-            "experience_years": doc.experience_years or 0,
-        }
+        s = frappe.get_doc("Salon Settings","Salon Settings")
+        return {"salon_name":s.salon_name or "Luminescent Atelier","tagline":s.tagline or "","phone":s.phone or "+91 98765 43210","address":s.address or "Bengaluru, KA","hours":s.hours or "9 AM - 8 PM","upi_id":s.upi_id or "salon@upi","google_rating":s.google_rating or 4.9,"total_clients":s.total_clients or 500,"experience_years":s.experience_years or 5}
     except Exception:
-        return {"salon_name": "Salon App", "salon_type": "Unisex"}
+        return {"salon_name":"Luminescent Atelier","phone":"+91 98765 43210","hours":"9 AM - 8 PM","upi_id":"salon@upi"}
 
 
 @frappe.whitelist(allow_guest=True)
 def book_appointment(customer_name, customer_phone, salon_type, service,
                      appointment_date, appointment_time, stylist=None, notes=None):
     try:
-        # Auto-create customer
-        existing_cust = frappe.db.get_value("Salon Customer", {"phone": customer_phone}, "name")
-        if not existing_cust:
-            cust = frappe.new_doc("Salon Customer")
-            cust.full_name = customer_name
-            cust.phone = customer_phone
-            cust.salon_type_preference = salon_type
-            cust.insert(ignore_permissions=True)
-
-        # Create appointment
-        appt = frappe.new_doc("Salon Appointment")
-        appt.customer_name = customer_name
-        appt.customer_phone = customer_phone
-        appt.salon_type = salon_type
-        appt.service = service
-        appt.appointment_date = appointment_date
-        appt.appointment_time = appointment_time
-        appt.status = "Booked"
-        if stylist:
-            appt.stylist = stylist
-        if notes:
-            appt.notes = notes
+        if not frappe.db.get_value("Salon Customer",{"phone":customer_phone},"name"):
+            frappe.get_doc({"doctype":"Salon Customer","full_name":customer_name,"phone":customer_phone,"salon_type":salon_type}).insert(ignore_permissions=True)
+        appt = frappe.get_doc({"doctype":"Salon Appointment","customer_name":customer_name,"customer_phone":customer_phone,"salon_type":salon_type,"service":service,"appointment_date":appointment_date,"appointment_time":appointment_time,"status":"Booked","stylist":stylist or None,"notes":notes or ""})
         appt.insert(ignore_permissions=True)
         frappe.db.commit()
-
-        return {"success": True, "appointment": appt.name, "message": f"Booking confirmed! ID: {appt.name}"}
+        return {"success":True,"appointment":appt.name}
     except Exception as e:
-        frappe.logger().error(f"book_appointment error: {e}")
-        return {"success": False, "error": str(e)}
+        return {"success":False,"error":str(e)}
 
 
 @frappe.whitelist()
-def get_dashboard_data(salon_type=None):
-    from frappe.utils import getdate, get_first_day, get_last_day
+def get_dashboard_stats(salon_type=None):
     today = nowdate()
-    month_start = get_first_day(today)
-
-    filters = [["appointment_date", "=", today]]
-    if salon_type:
-        filters.append(["salon_type", "=", salon_type])
-
-    today_appts = frappe.db.count("Salon Appointment", filters)
-    confirmed = frappe.db.count("Salon Appointment", [["appointment_date", "=", today], ["status", "in", ["Confirmed", "In Progress"]]])
-
-    month_filters = [["invoice_date", "between", [month_start, today]]]
-    if salon_type:
-        month_filters.append(["salon_type", "=", salon_type])
-
-    invoices = frappe.db.sql(f"""
-        SELECT COALESCE(SUM(grand_total), 0) as total
-        FROM `tabSalon Invoice`
-        WHERE invoice_date BETWEEN '{month_start}' AND '{today}'
-        {"AND salon_type = '" + salon_type + "'" if salon_type else ""}
-        AND payment_status = 'Paid'
-    """, as_dict=True)
-
-    revenue = invoices[0].total if invoices else 0
-    total_customers = frappe.db.count("Salon Customer")
-
-    return {
-        "today_appointments": today_appts,
-        "confirmed_today": confirmed,
-        "month_revenue": revenue,
-        "total_customers": total_customers,
-    }
+    def cnt(dt, f=None):
+        try: return frappe.db.count(dt, f or {})
+        except: return 0
+    base = {"appointment_date": today}
+    if salon_type and salon_type != "all": base["salon_type"] = salon_type
+    inv_f = {"payment_status":"Paid"}
+    if salon_type and salon_type != "all": inv_f["salon_type"] = salon_type
+    try:
+        rev = sum(flt(i.grand_total) for i in frappe.get_all("Salon Invoice",fields=["grand_total"],filters=inv_f,limit=2000))
+    except: rev = 0
+    return {"today_total":cnt("Salon Appointment",base),"today_men":cnt("Salon Appointment",{"appointment_date":today,"salon_type":"Men"}),"today_women":cnt("Salon Appointment",{"appointment_date":today,"salon_type":"Women"}),"today_unisex":cnt("Salon Appointment",{"appointment_date":today,"salon_type":"Unisex"}),"month_revenue":rev,"total_customers":cnt("Salon Customer"),"total_staff":cnt("Salon Staff",{"is_active":1}),"total_services":cnt("Salon Service",{"is_active":1})}
