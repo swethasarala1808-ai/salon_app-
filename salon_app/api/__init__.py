@@ -27,14 +27,20 @@ def get_staff(salon_type=None):
     if salon_type and salon_type != "All":
         filters["salon_type"] = salon_type
     try:
-        return frappe.get_all(
+        staff = frappe.get_all(
             "Salon Staff",
             fields=["name", "staff_name", "salon_type", "role",
                     "specialization", "experience_years", "photo"],
             filters=filters,
             limit=50
         )
-    except Exception:
+        # Ensure staff_name is set (fallback to name)
+        for s in staff:
+            if not s.get("staff_name"):
+                s["staff_name"] = s.get("name", "")
+        return staff
+    except Exception as e:
+        frappe.log_error(str(e), "get_staff Error")
         return []
 
 
@@ -84,29 +90,48 @@ def get_settings():
 def book_appointment(customer_name, customer_phone, salon_type, service,
                      appointment_date, appointment_time, stylist=None, notes=None):
     try:
-        if not frappe.db.get_value("Salon Customer", {"phone": customer_phone}, "name"):
-            frappe.get_doc({
-                "doctype": "Salon Customer",
-                "full_name": customer_name,
-                "phone": customer_phone,
-                "salon_type": salon_type
-            }).insert(ignore_permissions=True)
+        # Validate required fields
+        if not customer_name or not salon_type or not service or not appointment_date or not appointment_time:
+            return {"success": False, "error": "Missing required fields"}
 
-        appt = frappe.get_doc({
+        # Auto-create customer
+        if customer_phone:
+            existing = frappe.db.get_value("Salon Customer", {"phone": customer_phone}, "name")
+            if not existing:
+                try:
+                    frappe.get_doc({
+                        "doctype": "Salon Customer",
+                        "full_name": customer_name,
+                        "phone": customer_phone,
+                        "salon_type": salon_type
+                    }).insert(ignore_permissions=True)
+                except Exception:
+                    pass
+
+        # Validate stylist link exists
+        valid_stylist = None
+        if stylist:
+            if frappe.db.exists("Salon Staff", stylist):
+                valid_stylist = stylist
+
+        appt_data = {
             "doctype": "Salon Appointment",
             "customer_name": customer_name,
-            "customer_phone": customer_phone,
+            "customer_phone": customer_phone or "",
             "salon_type": salon_type,
             "service": service,
             "appointment_date": appointment_date,
             "appointment_time": appointment_time,
             "status": "Booked",
-            "stylist": stylist or None,
             "notes": notes or ""
-        })
+        }
+        if valid_stylist:
+            appt_data["stylist"] = valid_stylist
+
+        appt = frappe.get_doc(appt_data)
         appt.insert(ignore_permissions=True)
         frappe.db.commit()
-        return {"success": True, "appointment": appt.name}
+        return {"success": True, "appointment": appt.name, "name": appt.name}
     except Exception as e:
         frappe.log_error(str(e), "Salon Booking Error")
         return {"success": False, "error": str(e)}

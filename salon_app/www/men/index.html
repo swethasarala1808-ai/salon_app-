@@ -246,10 +246,14 @@ const IC={'haircut':'✂️','beard':'🧔','shave':'🪒','facial':'✨','color
 function ico(n){const l=(n||'').toLowerCase();for(const[k,v]of Object.entries(IC))if(l.includes(k))return v;return IC.default;}
 async function api(m,p={}){
   try{
-    const qs=Object.entries(p).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
-    const r=await fetch(`${API}.${m}${qs?'?'+qs:''}`,{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}});
-    const d=await r.json();return d.message||[];
-  }catch(e){return[];}
+    const qs=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+    const r=await fetch(`${API}.${m}${qs?'?'+qs:''}`,{
+      headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch','X-Requested-With':'XMLHttpRequest'}
+    });
+    if(!r.ok){console.error('API error',m,r.status);return [];}
+    const d=await r.json();
+    return d.message||[];
+  }catch(e){console.error('API fetch error',m,e);return[];}
 }
 let allS=[],activeCat='all';
 async function loadSvcs(){
@@ -304,9 +308,17 @@ async function doBook(){
   let csrf='fetch';
   try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
   try{
-    const r=await fetch('/api/method/salon_app.api.book_appointment',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({customer_name:name,customer_phone:phone,salon_type:ST,service:svc,stylist:styl,appointment_date:date,appointment_time:time,notes})});
-    const d=await r.json();const res=d.message||{};
-    if(res.success){
+    // First try the whitelisted API method
+    const params=new URLSearchParams({customer_name:name,customer_phone:phone,salon_type:ST,service:svc,stylist:styl,appointment_date:date,appointment_time:time,notes});
+    let r=await fetch('/api/method/salon_app.api.book_appointment?'+params.toString(),{method:'GET',headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch','X-Requested-With':'XMLHttpRequest'}});
+    if(!r.ok){
+      // Fallback: direct resource insert
+      r=await fetch('/api/resource/Salon%20Appointment',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},body:JSON.stringify({customer_name:name,customer_phone:phone,salon_type:ST,service:svc,stylist:styl||null,appointment_date:date,appointment_time:time,status:'Booked',notes})});
+    }
+    const d=await r.json();
+    const apptName=d.message?.appointment||d.message?.name||d.data?.name;
+    const res=apptName?{success:true,appointment:apptName}:(d.message||{});
+    if(res.success||apptName){
       const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
       all.push({name,phone,service:svc,salonType:ST,id:res.appointment,ts:new Date().toISOString()});
       localStorage.setItem('salon_bookings',JSON.stringify(all));

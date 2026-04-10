@@ -332,13 +332,15 @@ body{font-family:'Manrope',sans-serif;background:var(--dark);color:var(--text);d
     <div class="pane" id="pane-appointments">
       <div class="sec-hdr">
         <div class="sec-ttl">Appointments</div>
+        <div style="display:flex;gap:8px;align-items:center">
+        <button class="tb-btn pri" onclick="openSidePanel('new_appointment')">+ Add Appointment</button>
         <div class="ftabs">
           <button class="ftab on" onclick="filterAppts('all',this)">All</button>
           <button class="ftab" onclick="filterAppts('Booked',this)">Booked</button>
           <button class="ftab" onclick="filterAppts('Confirmed',this)">Confirmed</button>
           <button class="ftab" onclick="filterAppts('In Progress',this)">In Progress</button>
           <button class="ftab" onclick="filterAppts('Completed',this)">Completed</button>
-        </div>
+        </div></div>
       </div>
       <table class="dt">
         <thead><tr><th>Customer</th><th>Salon</th><th>Service</th><th>Stylist</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
@@ -518,16 +520,50 @@ let allAppts=[], allInvoices=[], allServices=[], posCart=[], posPayMethod='Cash'
 let editingRecord=null, editingDoctype=null;
 
 // ── GET CSRF ──
+let _csrfToken = null;
+async function fetchCSRF(){
+  if(_csrfToken) return _csrfToken;
+  try{
+    const r=await fetch('/api/method/frappe.auth.get_logged_user',{headers:{'Accept':'application/json'}});
+    // Extract from cookie
+    document.cookie.split(';').forEach(x=>{
+      const t=x.trim();
+      if(t.startsWith('csrf_token=')){_csrfToken=decodeURIComponent(t.split('=')[1]);}
+    });
+    if(!_csrfToken){
+      // Try from frappe.csrf_token if available
+      if(typeof frappe!=='undefined'&&frappe.csrf_token){_csrfToken=frappe.csrf_token;}
+      else _csrfToken='fetch';
+    }
+  }catch(e){_csrfToken='fetch';}
+  return _csrfToken;
+}
 function getCSRF(){
+  // Sync version - returns cached or 'fetch'
   let c='fetch';
   try{document.cookie.split(';').forEach(x=>{if(x.trim().startsWith('csrf_token='))c=decodeURIComponent(x.trim().split('=')[1]);});}catch(e){}
-  return c;
+  if(c&&c!=='fetch')_csrfToken=c;
+  return _csrfToken||c;
 }
 
 // ── API CALLS ──
 async function API(path){
-  const r=await fetch('/api/resource/'+path,{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}});
-  if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  const csrf=getCSRF();
+  const r=await fetch('/api/resource/'+path,{
+    headers:{
+      'Accept':'application/json',
+      'X-Frappe-CSRF-Token':csrf,
+      'X-Requested-With':'XMLHttpRequest'
+    }
+  });
+  if(!r.ok){
+    if(r.status===417||r.status===403){
+      // Retry with 'fetch' token
+      const r2=await fetch('/api/resource/'+path,{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch','X-Requested-With':'XMLHttpRequest'}});
+      if(r2.ok)return r2.json();
+    }
+    throw new Error(r.status+' '+r.statusText);
+  }
   return r.json();
 }
 async function MAPI(method,data={}){
@@ -536,22 +572,37 @@ async function MAPI(method,data={}){
   return r.json();
 }
 async function SAVE(doctype,name,data){
-  const r=await fetch('/api/resource/'+doctype+(name?'/'+encodeURIComponent(name):''),{
+  const csrf=getCSRF();
+  const url='/api/resource/'+encodeURIComponent(doctype)+(name?'/'+encodeURIComponent(name):'');
+  const r=await fetch(url,{
     method:name?'PUT':'POST',
-    headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':getCSRF(),'X-Requested-With':'XMLHttpRequest'},
-    body:JSON.stringify(name?data:{...data,doctype})
+    headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},
+    body:JSON.stringify(data)
   });
-  if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  if(!r.ok){
+    const txt=await r.text();
+    throw new Error(r.status+' '+txt.slice(0,200));
+  }
   return r.json();
 }
 async function INSERT(doc){
-  const r=await fetch('/api/method/frappe.client.insert',{
+  const csrf=getCSRF();
+  const dt=doc.doctype;
+  const payload={...doc};
+  delete payload.doctype;
+  const r=await fetch('/api/resource/'+encodeURIComponent(dt),{
     method:'POST',
-    headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':getCSRF(),'X-Requested-With':'XMLHttpRequest'},
-    body:JSON.stringify({doc})
+    headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},
+    body:JSON.stringify(payload)
   });
-  if(!r.ok) throw new Error(r.status+' '+r.statusText);
-  return r.json();
+  if(!r.ok){
+    const txt=await r.text();
+    throw new Error(r.status+' '+txt.slice(0,200));
+  }
+  const d=await r.json();
+  // Normalize response - /api/resource returns {data:{name:...}}
+  if(d.data){return {message:d.data};}
+  return d;
 }
 
 // ── LOGIN ──
@@ -1269,9 +1320,20 @@ async function syncOne(idx){
   const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
   const b=all[idx];if(!b)return;
   try{
-    const d=await INSERT({doctype:'Salon Appointment',customer_name:b.name,customer_phone:b.phone,salon_type:b.salonType||'Unisex',service:b.service,appointment_date:b.date,appointment_time:b.time||'10:00:00',status:'Booked',notes:'Via portal'});
-    if(d.message?.name){all[idx].synced=true;localStorage.setItem('salon_bookings',JSON.stringify(all));toast('✓ Saved: '+d.message.name);checkPending();loadCurrent();}
-  }catch(e){toast('Error: '+e.message,'err');}
+    const apptData={customer_name:b.name,customer_phone:b.phone,salon_type:b.salonType||'Unisex',service:b.service,appointment_date:b.date||new Date().toISOString().split('T')[0],appointment_time:b.time||'10:00:00',status:'Booked',notes:'Via portal - Synced'};
+    const csrf=getCSRF();
+    const r=await fetch('/api/resource/Salon%20Appointment',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},body:JSON.stringify(apptData)});
+    if(r.ok){
+      const d=await r.json();
+      const savedName=d.data?.name||d.message?.name;
+      if(savedName){
+        all[idx].synced=true;
+        localStorage.setItem('salon_bookings',JSON.stringify(all));
+        toast('✓ Saved: '+savedName);
+        checkPending();loadCurrent();
+      }else{toast('Sync response unclear','err');}
+    }else{throw new Error(r.status);}
+  }catch(e){toast('Sync Error: '+e.message,'err');}
 }
 
 // ── TOAST ──
