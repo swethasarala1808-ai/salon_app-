@@ -1,49 +1,53 @@
 {
-  "name": "Salon Service",
+  "name": "Salon Staff",
   "doctype": "DocType",
   "module": "Salon App",
   "custom": 0,
-  "autoname": "field:service_name",
+  "autoname": "field:staff_name",
   "naming_rule": "By fieldname",
   "fields": [
     {
-      "fieldname": "service_name",
+      "fieldname": "staff_name",
       "fieldtype": "Data",
-      "label": "Service Name",
+      "label": "Staff Name",
       "reqd": 1,
       "in_list_view": 1
     },
     {
       "fieldname": "salon_type",
       "fieldtype": "Select",
-      "label": "Salon Type",
+      "label": "Works For",
       "options": "Men\nWomen\nUnisex",
       "reqd": 1,
       "in_list_view": 1
     },
     {
-      "fieldname": "category",
+      "fieldname": "role",
+      "fieldtype": "Select",
+      "label": "Role",
+      "options": "Barber\nStylist\nNail Tech\nSkin Therapist\nMakeup Artist\nManager",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "phone",
       "fieldtype": "Data",
-      "label": "Category",
-      "in_list_view": 1
+      "label": "Phone",
+      "reqd": 1
     },
     {
-      "fieldname": "price",
-      "fieldtype": "Currency",
-      "label": "Price",
-      "reqd": 1,
-      "in_list_view": 1
+      "fieldname": "specialization",
+      "fieldtype": "Data",
+      "label": "Specialization"
     },
     {
-      "fieldname": "duration_minutes",
+      "fieldname": "experience_years",
       "fieldtype": "Int",
-      "label": "Duration (mins)",
-      "default": "30"
+      "label": "Experience (Years)"
     },
     {
-      "fieldname": "description",
-      "fieldtype": "Small Text",
-      "label": "Description"
+      "fieldname": "photo",
+      "fieldtype": "Attach Image",
+      "label": "Photo"
     },
     {
       "fieldname": "is_active",
@@ -64,7 +68,8 @@
       "role": "Salon Owner",
       "read": 1,
       "write": 1,
-      "create": 1
+      "create": 1,
+      "delete": 1
     },
     {
       "role": "Guest",

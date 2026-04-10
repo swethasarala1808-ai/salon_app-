@@ -1,105 +1,138 @@
 import frappe
+from frappe.utils import nowdate
 
 
 def after_install():
-    print("▶ Salon App: Running setup...")
+    print("Setting up Salon App...")
     _create_roles()
-    _create_service_categories()
-    _create_sample_services()
+    _create_services()
+    _create_staff()
+    _create_packages()
     frappe.db.commit()
-    print("✅ Salon App: Setup complete.")
+    print("Salon App setup complete!")
 
 
 def _create_roles():
-    roles = [
-        {"role_name": "Salon Owner", "desk_access": 1},
-        {"role_name": "Salon Stylist", "desk_access": 1},
-        {"role_name": "Salon Customer", "desk_access": 0},
-        {"role_name": "Salon Receptionist", "desk_access": 1},
-    ]
-    for r in roles:
-        if not frappe.db.exists("Role", r["role_name"]):
-            doc = frappe.new_doc("Role")
-            doc.role_name = r["role_name"]
-            doc.desk_access = r["desk_access"]
-            doc.insert(ignore_permissions=True)
-            print(f"  ✔ Role: {r['role_name']}")
+    for r in ["Salon Owner", "Salon Staff", "Salon Receptionist"]:
+        if not frappe.db.exists("Role", r):
+            frappe.get_doc({"doctype": "Role", "role_name": r, "desk_access": 1}).insert(ignore_permissions=True)
+    print("  Roles created")
 
 
-def _create_service_categories():
-    # Men categories
-    men_cats = ["Haircut", "Beard & Shave", "Men Facial", "Men Hair Color", "Men Grooming"]
-    # Women categories
-    women_cats = ["Hair Styling", "Hair Treatment", "Women Facial", "Waxing", "Threading", "Bridal", "Makeup", "Nail Art"]
-    # Unisex categories
-    unisex_cats = ["Hair Spa", "Scalp Treatment", "Keratin", "Massage", "Packages"]
-
-    all_cats = [
-        {"name": c, "gender_type": "Men"} for c in men_cats
-    ] + [
-        {"name": c, "gender_type": "Women"} for c in women_cats
-    ] + [
-        {"name": c, "gender_type": "Unisex"} for c in unisex_cats
-    ]
-
-    for cat in all_cats:
-        if not frappe.db.exists("Service Category", cat["name"]):
-            try:
-                doc = frappe.new_doc("Service Category")
-                doc.category_name = cat["name"]
-                doc.gender_type = cat["gender_type"]
-                doc.is_active = 1
-                doc.insert(ignore_permissions=True)
-            except Exception as e:
-                print(f"  ⚠ Category {cat['name']}: {e}")
-    print(f"  ✔ Service categories created")
-
-
-def _create_sample_services():
+def _create_services():
     services = [
         # MEN
-        {"name": "Men Haircut", "category": "Haircut", "gender_type": "Men", "price": 150, "duration_minutes": 20},
-        {"name": "Kids Haircut", "category": "Haircut", "gender_type": "Men", "price": 100, "duration_minutes": 15},
-        {"name": "Beard Trim", "category": "Beard & Shave", "gender_type": "Men", "price": 100, "duration_minutes": 15},
-        {"name": "Clean Shave", "category": "Beard & Shave", "gender_type": "Men", "price": 80, "duration_minutes": 15},
-        {"name": "Beard Styling", "category": "Beard & Shave", "gender_type": "Men", "price": 150, "duration_minutes": 20},
-        {"name": "Men Basic Facial", "category": "Men Facial", "gender_type": "Men", "price": 300, "duration_minutes": 45},
-        {"name": "Men Detan Facial", "category": "Men Facial", "gender_type": "Men", "price": 400, "duration_minutes": 60},
-        {"name": "Men Hair Color", "category": "Men Hair Color", "gender_type": "Men", "price": 500, "duration_minutes": 60},
+        ("Men Haircut", "Men", "Haircut", 150, 20, "Classic and modern haircuts for men"),
+        ("Kids Haircut", "Men", "Haircut", 100, 15, "Gentle haircuts for children"),
+        ("Beard Trim", "Men", "Beard & Shave", 100, 15, "Neat beard shaping and trimming"),
+        ("Clean Shave", "Men", "Beard & Shave", 80, 15, "Traditional razor clean shave"),
+        ("Beard Design", "Men", "Beard & Shave", 200, 25, "Creative beard styling"),
+        ("Men Basic Facial", "Men", "Men Facial", 300, 45, "Deep cleansing facial for men"),
+        ("Men Detan Facial", "Men", "Men Facial", 400, 60, "Detan and brightening facial"),
+        ("Men Hair Color", "Men", "Men Hair Color", 500, 60, "Hair coloring for men"),
+        ("Head Massage", "Men", "Men Grooming", 200, 20, "Relaxing head massage"),
         # WOMEN
-        {"name": "Women Haircut", "category": "Hair Styling", "gender_type": "Women", "price": 250, "duration_minutes": 30},
-        {"name": "Blow Dry", "category": "Hair Styling", "gender_type": "Women", "price": 300, "duration_minutes": 30},
-        {"name": "Hair Straightening", "category": "Hair Treatment", "gender_type": "Women", "price": 1200, "duration_minutes": 120},
-        {"name": "Hair Rebonding", "category": "Hair Treatment", "gender_type": "Women", "price": 2500, "duration_minutes": 180},
-        {"name": "Women Basic Facial", "category": "Women Facial", "gender_type": "Women", "price": 500, "duration_minutes": 60},
-        {"name": "Gold Facial", "category": "Women Facial", "gender_type": "Women", "price": 800, "duration_minutes": 75},
-        {"name": "Full Arms Waxing", "category": "Waxing", "gender_type": "Women", "price": 200, "duration_minutes": 30},
-        {"name": "Full Legs Waxing", "category": "Waxing", "gender_type": "Women", "price": 300, "duration_minutes": 40},
-        {"name": "Full Body Waxing", "category": "Waxing", "gender_type": "Women", "price": 800, "duration_minutes": 90},
-        {"name": "Eyebrow Threading", "category": "Threading", "gender_type": "Women", "price": 30, "duration_minutes": 10},
-        {"name": "Upper Lip Threading", "category": "Threading", "gender_type": "Women", "price": 20, "duration_minutes": 5},
-        {"name": "Bridal Makeup", "category": "Bridal", "gender_type": "Women", "price": 8000, "duration_minutes": 180},
-        {"name": "Party Makeup", "category": "Makeup", "gender_type": "Women", "price": 2000, "duration_minutes": 90},
-        {"name": "Manicure", "category": "Nail Art", "gender_type": "Women", "price": 300, "duration_minutes": 45},
-        {"name": "Pedicure", "category": "Nail Art", "gender_type": "Women", "price": 400, "duration_minutes": 60},
+        ("Women Haircut", "Women", "Hair Styling", 250, 30, "Precision cut for all hair types"),
+        ("Blow Dry", "Women", "Hair Styling", 300, 30, "Professional blow dry and styling"),
+        ("Hair Straightening", "Women", "Hair Treatment", 1200, 120, "Semi-permanent straightening"),
+        ("Hair Rebonding", "Women", "Hair Treatment", 2500, 180, "Permanent rebonding treatment"),
+        ("Women Basic Facial", "Women", "Women Facial", 500, 60, "Deep cleansing facial"),
+        ("Gold Facial", "Women", "Women Facial", 800, 75, "Luxury gold leaf facial"),
+        ("Full Arms Waxing", "Women", "Waxing", 200, 30, "Full arms hair removal"),
+        ("Full Legs Waxing", "Women", "Waxing", 300, 40, "Full legs hair removal"),
+        ("Full Body Waxing", "Women", "Waxing", 800, 90, "Complete body waxing"),
+        ("Eyebrow Threading", "Women", "Threading", 30, 10, "Eyebrow shaping"),
+        ("Upper Lip Threading", "Women", "Threading", 20, 5, "Upper lip hair removal"),
+        ("Bridal Makeup", "Women", "Bridal", 8000, 180, "Complete bridal look"),
+        ("Party Makeup", "Women", "Makeup", 2000, 90, "Party and event makeup"),
+        ("Manicure", "Women", "Nail Art", 300, 45, "Hand care and nail polish"),
+        ("Pedicure", "Women", "Nail Art", 400, 60, "Foot care and nail polish"),
         # UNISEX
-        {"name": "Hair Spa", "category": "Hair Spa", "gender_type": "Unisex", "price": 600, "duration_minutes": 60},
-        {"name": "Deep Conditioning", "category": "Scalp Treatment", "gender_type": "Unisex", "price": 800, "duration_minutes": 75},
-        {"name": "Keratin Treatment", "category": "Keratin", "gender_type": "Unisex", "price": 3000, "duration_minutes": 180},
-        {"name": "Head Massage", "category": "Massage", "gender_type": "Unisex", "price": 400, "duration_minutes": 30},
-        {"name": "Full Body Massage", "category": "Massage", "gender_type": "Unisex", "price": 1500, "duration_minutes": 60},
+        ("Hair Spa", "Unisex", "Hair Spa", 600, 60, "Deep nourishing hair spa"),
+        ("Deep Conditioning", "Unisex", "Scalp Treatment", 800, 75, "Intensive conditioning"),
+        ("Keratin Treatment", "Unisex", "Keratin", 3000, 180, "Smoothing keratin treatment"),
+        ("Scalp Massage", "Unisex", "Massage", 400, 30, "Therapeutic scalp massage"),
+        ("Full Body Massage", "Unisex", "Massage", 1500, 60, "Relaxing full body massage"),
+        ("Hair Coloring", "Unisex", "Hair Color", 1500, 120, "Professional hair coloring"),
+        ("Highlights", "Unisex", "Hair Color", 2000, 150, "Balayage and highlights"),
     ]
-    for s in services:
-        if not frappe.db.exists("Salon Service", s["name"]):
+    for name, stype, cat, price, dur, desc in services:
+        if not frappe.db.exists("Salon Service", name):
             try:
-                doc = frappe.new_doc("Salon Service")
-                doc.service_name = s["name"]
-                doc.category = s["category"]
-                doc.gender_type = s["gender_type"]
-                doc.price = s["price"]
-                doc.duration_minutes = s["duration_minutes"]
-                doc.is_active = 1
-                doc.insert(ignore_permissions=True)
+                frappe.get_doc({
+                    "doctype": "Salon Service",
+                    "service_name": name,
+                    "salon_type": stype,
+                    "category": cat,
+                    "price": price,
+                    "duration_minutes": dur,
+                    "description": desc,
+                    "is_active": 1
+                }).insert(ignore_permissions=True)
             except Exception as e:
-                print(f"  ⚠ Service {s['name']}: {e}")
-    print(f"  ✔ Sample services created: {len(services)}")
+                print(f"  Warning service {name}: {e}")
+    print(f"  Services created")
+
+
+def _create_staff():
+    staff = [
+        ("Rajan Kumar", "Men", "Barber", "Haircut, Beard Styling", "9876543210", 8),
+        ("Suresh M", "Men", "Barber", "Clean Shave, Beard Design", "9876543215", 5),
+        ("Anita Reddy", "Women", "Stylist", "Hair Styling, Makeup", "9876543211", 10),
+        ("Priya Sharma", "Women", "Skin Therapist", "Facials, Waxing, Threading", "9876543212", 7),
+        ("Kavya Nair", "Women", "Nail Tech", "Manicure, Pedicure", "9876543213", 4),
+        ("Deepa Rao", "Unisex", "Stylist", "Hair Spa, Keratin, Color", "9876543214", 9),
+        ("Meena T", "Women", "Makeup Artist", "Bridal, Party Makeup", "9876543216", 6),
+    ]
+    for name, stype, role, spec, phone, exp in staff:
+        if not frappe.db.exists("Salon Staff", name):
+            try:
+                frappe.get_doc({
+                    "doctype": "Salon Staff",
+                    "staff_name": name,
+                    "salon_type": stype,
+                    "role": role,
+                    "specialization": spec,
+                    "phone": phone,
+                    "experience_years": exp,
+                    "is_active": 1
+                }).insert(ignore_permissions=True)
+            except Exception as e:
+                print(f"  Warning staff {name}: {e}")
+    print(f"  Staff created")
+
+
+def _create_packages():
+    packages = [
+        ("Quick Groom", "Men", 299, "Best starter combo",
+         "Men Haircut\nBeard Trim\nFace Cleanup", 10, 30),
+        ("Royal Groom", "Men", 799, "Complete men grooming",
+         "Designer Haircut\nBeard Design\nDetan Facial\nHead Massage", 15, 45),
+        ("Glow Package", "Women", 799, "Most popular women package",
+         "Women Haircut\nBasic Facial\nEyebrow Threading\nHead Massage", 10, 30),
+        ("Beauty Blast", "Women", 1499, "Complete beauty package",
+         "Hair Styling\nGold Facial\nArms Waxing\nManicure\nEyebrow + Lip", 20, 45),
+        ("Bridal Glow", "Women", 8999, "Complete bridal package",
+         "Bridal Makeup\nHair Styling\nFull Body Waxing\nFacial\nManicure + Pedicure", 0, 90),
+        ("Spa Day", "Unisex", 1299, "Relaxation package",
+         "Hair Spa\nDeep Conditioning\nScalp Massage", 10, 60),
+        ("Hair Transformation", "Unisex", 3999, "Complete hair makeover",
+         "Keratin Treatment\nDeep Conditioning\nHair Coloring\nHair Spa", 15, 90),
+    ]
+    for name, stype, price, desc, svcs, disc, validity in packages:
+        if not frappe.db.exists("Salon Package", name):
+            try:
+                frappe.get_doc({
+                    "doctype": "Salon Package",
+                    "package_name": name,
+                    "salon_type": stype,
+                    "price": price,
+                    "description": desc,
+                    "services_included": svcs,
+                    "discount_percent": disc,
+                    "validity_days": validity,
+                    "is_active": 1
+                }).insert(ignore_permissions=True)
+            except Exception as e:
+                print(f"  Warning package {name}: {e}")
+    print(f"  Packages created")
