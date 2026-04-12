@@ -30,17 +30,15 @@
     },
     {
       "fieldname": "service",
-      "fieldtype": "Link",
+      "fieldtype": "Data",
       "label": "Service",
-      "options": "Salon Service",
       "reqd": 1,
       "in_list_view": 1
     },
     {
       "fieldname": "stylist",
-      "fieldtype": "Link",
-      "label": "Stylist",
-      "options": "Salon Staff"
+      "fieldtype": "Data",
+      "label": "Stylist"
     },
     {
       "fieldname": "appointment_date",

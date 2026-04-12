@@ -1,31 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Beauty Parlor Dashboard</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Beauty Parlor Owner Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Manrope',sans-serif;background:#0f0609;color:white;min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
-.logo{font-family:serif;font-size:2em;color:#d4a847}
-p{color:rgba(255,255,255,.5);font-size:.9em}
-a{color:#d4a847;text-decoration:none;padding:12px 28px;border:1px solid #d4a847;border-radius:8px;font-size:.88em;transition:all .2s}
-a:hover{background:#d4a847;color:#000}
-.links{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+:root{--p:#d4a847;--dark:#0f0609;--card:#1a0d10;--border:rgba(180,120,60,.2);--text:#f5e6d0;--muted:#a0856a}
+body{font-family:'Manrope',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;display:flex}
+/* SIDEBAR */
+.sidebar{width:220px;background:#120809;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;overflow-y:auto}
+.sb-brand{padding:18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{font-family:"Noto Serif",serif;font-size:1.1em;color:var(--p);font-weight:700}
+.sb-sub{font-size:.62em;color:var(--muted);margin-top:2px}
+.sb-nav{flex:1;padding:10px 8px}
+.sb-sec{font-size:.59em;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 12px 4px;font-weight:700}
+.sb-link{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;color:var(--muted);font-size:.82em;font-weight:500;transition:all .2s;margin-bottom:1px;cursor:pointer;border:none;background:none;width:100%;font-family:"Manrope",sans-serif}
+.sb-link:hover{background:rgba(212,168,71,.06);color:var(--text)}
+.sb-link.active{background:rgba(212,168,71,.1);color:var(--p)}
+.sb-user{padding:10px;border-top:1px solid var(--border)}
+.u-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#d4a847,#a07830);display:flex;align-items:center;justify-content:center;font-size:.75em;font-weight:700;color:#000}
+.lgbtn{margin-top:7px;width:100%;padding:6px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#f87171;border-radius:6px;cursor:pointer;font-size:.75em;font-family:"Manrope",sans-serif}
+/* MAIN */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.topbar{padding:14px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#120809;position:sticky;top:0;z-index:100}
+.pg-title{font-family:"Noto Serif",serif;font-size:1.2em;font-weight:700;color:var(--p)}
+.tb-btn{padding:7px 14px;border-radius:7px;border:1px solid var(--border);background:rgba(212,168,71,.08);color:var(--text);font-size:.8em;cursor:pointer;font-family:"Manrope",sans-serif}
+.tb-btn.pri{background:linear-gradient(135deg,#d4a847,#a07830);color:#000;border:none;font-weight:700}
+.content{padding:20px 24px;flex:1}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden}
+.scard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#d4a847,#a07830)}
+.scard-val{font-family:"Noto Serif",serif;font-size:1.8em;font-weight:900;color:var(--p);margin-bottom:3px}
+.scard-lbl{font-size:.74em;color:var(--muted)}
+/* TABLE */
+.pane{display:none}.pane.on{display:block}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.sec-ttl{font-family:"Noto Serif",serif;font-size:1.15em;font-weight:700;color:var(--p)}
+.dt{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.dt th{padding:10px 14px;text-align:left;font-size:.68em;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:rgba(255,255,255,.01)}
+.dt td{padding:10px 14px;font-size:.82em;border-bottom:1px solid rgba(255,255,255,.03)}
+.dt tr:hover td{background:rgba(212,168,71,.03)}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:.7em;font-weight:700}
+.b-paid{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.b-unpaid{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.b-booked{background:rgba(251,191,36,.1);color:#fcd34d}
+.b-confirmed{background:rgba(34,197,94,.1);color:#4ade80}
+.b-completed{background:rgba(99,102,241,.1);color:#a78bfa}
+.b-cancelled{background:rgba(239,68,68,.1);color:#f87171}
+.st-sel{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:6px;font-size:.76em;font-family:"Manrope",sans-serif;cursor:pointer;outline:none}
+.act-btn{padding:3px 9px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.72em;cursor:pointer;font-family:"Manrope",sans-serif;margin-right:3px;transition:all .2s}
+.act-btn:hover{background:rgba(212,168,71,.06);color:var(--text)}
+.empty{text-align:center;padding:44px;color:var(--muted);font-size:.88em}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(150deg,#0f0609,#1a0d10);display:flex;align-items:center;justify-content:center;z-index:9999}
+.lbox{background:rgba(26,13,16,.9);border:1px solid rgba(212,168,71,.2);border-radius:20px;padding:44px 36px;width:100%;max-width:400px;text-align:center}
+.lbox h2{font-family:"Noto Serif",serif;font-size:1.8em;color:var(--p);margin-bottom:4px}
+.lerr{display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;padding:10px;border-radius:8px;font-size:.8em;margin-bottom:12px}
+.linp{width:100%;padding:11px 14px;background:rgba(15,6,9,.7);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:"Manrope",sans-serif;font-size:.9em;outline:none;margin-bottom:10px}
+.linp:focus{border-color:var(--p)}
+.lbtn{width:100%;padding:13px;background:linear-gradient(135deg,#d4a847,#a07830);color:#000;border:none;border-radius:8px;font-family:"Manrope",sans-serif;font-weight:800;font-size:.92em;cursor:pointer}
+/* WA POPUP */
+.wa-pop{position:fixed;bottom:24px;right:24px;background:#0d1528;border:2px solid #25d366;border-radius:14px;padding:18px 20px;z-index:9999;max-width:280px;font-family:"Manrope",sans-serif;display:none}
+.wa-pop h4{color:var(--text);font-size:.88em;font-weight:700;margin-bottom:4px}
+.wa-pop p{color:var(--muted);font-size:.76em;margin-bottom:12px}
+.wa-pop-btns{display:flex;gap:8px}
+.wa-pop-btns a{flex:1;background:#25d366;color:white;padding:8px;border-radius:7px;text-align:center;font-size:.8em;font-weight:700;text-decoration:none}
+.wa-pop-btns button{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:8px;border-radius:7px;cursor:pointer;font-family:"Manrope",sans-serif;font-size:.8em}
 </style>
 </head>
 <body>
-<div class="logo">🌸 Beauty Parlor Dashboard</div>
-<p>The Beauty Parlor Dashboard is at a separate location</p>
-<div class="links">
-  <a href="/owner">🌸 Go to Beauty Owner Dashboard</a>
-  <a href="/bizaxl">💄 Go to Beauty Customer Site</a>
-  <a href="/salon-dashboard">✂ Go to Salon Dashboard</a>
-  <a href="/">🏠 Home</a>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lbox">
+    <div style="font-size:2em;margin-bottom:8px">🌸</div>
+    <h2>Beauty Parlor</h2>
+    <p style="color:var(--muted);font-size:.84em;margin-bottom:28px">Owner Dashboard</p>
+    <div class="lerr" id="lErr"></div>
+    <input class="linp" id="lEmail" type="text" placeholder="Username (e.g. Administrator)">
+    <input class="linp" id="lPass" type="password" placeholder="Password">
+    <button class="lbtn" onclick="doLogin()">Login</button>
+    <div style="margin-top:14px;display:flex;gap:12px;justify-content:center">
+      <a href="/bizaxl" style="color:var(--muted);font-size:.78em;text-decoration:none">💄 Customer Site</a>
+      <a href="/salon-dashboard" style="color:var(--muted);font-size:.78em;text-decoration:none">✂ Salon Dashboard</a>
+    </div>
+  </div>
 </div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">🌸 Beauty Parlor</div>
+    <div class="sb-sub">Owner Dashboard</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <button class="sb-link active" onclick="nav('dashboard',this)">📊 Dashboard</button>
+    <button class="sb-link" onclick="nav('appointments',this)">📅 Appointments</button>
+    <button class="sb-link" onclick="nav('customers',this)">👤 Customers</button>
+    <div class="sb-sec">Business</div>
+    <button class="sb-link" onclick="nav('services',this)">✂ Services</button>
+    <button class="sb-link" onclick="nav('staff',this)">👥 Stylists</button>
+    <button class="sb-link" onclick="nav('invoices',this)">🧾 Billing</button>
+    <div class="sb-sec">Portals</div>
+    <button class="sb-link" onclick="window.open('/bizaxl','_blank')">💄 Customer Site</button>
+    <button class="sb-link" onclick="window.open('/salon-dashboard','_blank')">✂ Salon Dashboard</button>
+  </div>
+  <div class="sb-user">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+      <div class="u-av">B</div>
+      <div><div style="font-size:.8em;font-weight:600" id="uName">Owner</div><div style="font-size:.7em;color:var(--muted)">Beauty Admin</div></div>
+    </div>
+    <button class="lgbtn" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="pg-title" id="pgTitle">🌸 Beauty Parlor Dashboard</div>
+      <div style="font-size:.75em;color:var(--muted);margin-top:1px" id="pgSub">Overview</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="tb-btn" onclick="loadCurrent()">↻ Refresh</button>
+      <button class="tb-btn pri" onclick="window.open('/app/appointment','_blank')">+ New (Frappe)</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="pane on" id="pane-dashboard">
+      <div class="stats-row">
+        <div class="scard"><div class="scard-val" id="st1">0</div><div class="scard-lbl">Today's Appointments</div></div>
+        <div class="scard"><div class="scard-val" id="st2">₹0</div><div class="scard-lbl">Revenue (Paid)</div></div>
+        <div class="scard"><div class="scard-val" id="st3">0</div><div class="scard-lbl">Total Customers</div></div>
+        <div class="scard"><div class="scard-val" id="st4">0</div><div class="scard-lbl">Active Stylists</div></div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px">
+        <h3 style="font-family:'Noto Serif',serif;color:var(--p);margin-bottom:16px">Recent Appointments</h3>
+        <table class="dt" style="border:none;border-radius:0">
+          <thead><tr><th>Customer</th><th>Service</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="recentAppts"><tr><td colspan="4"><div class="empty">Loading...</div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div class="pane" id="pane-appointments">
+      <div class="sec-hdr">
+        <div class="sec-ttl">Appointments</div>
+        <button class="tb-btn pri" onclick="window.open('/app/appointment/new-appointment-1','_blank')">+ Add</button>
+      </div>
+      <table class="dt">
+        <thead><tr><th>Customer</th><th>Stylist</th><th>Service</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="apptBody"><tr><td colspan="7"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div class="pane" id="pane-customers">
+      <div class="sec-hdr"><div class="sec-ttl">Customers</div></div>
+      <table class="dt">
+        <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Visits</th></tr></thead>
+        <tbody id="custBody"><tr><td colspan="4"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="pane" id="pane-services">
+      <div class="sec-hdr"><div class="sec-ttl">Beauty Services</div></div>
+      <table class="dt">
+        <thead><tr><th>Service</th><th>Category</th><th>Price</th><th>Duration</th></tr></thead>
+        <tbody id="svcBody"><tr><td colspan="4"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- STAFF -->
+    <div class="pane" id="pane-staff">
+      <div class="sec-hdr"><div class="sec-ttl">Stylists</div></div>
+      <table class="dt">
+        <thead><tr><th>Name</th><th>Specialization</th><th>Phone</th></tr></thead>
+        <tbody id="staffBody"><tr><td colspan="3"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- INVOICES -->
+    <div class="pane" id="pane-invoices">
+      <div class="sec-hdr"><div class="sec-ttl">Billing</div></div>
+      <table class="dt">
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="invBody"><tr><td colspan="6"><div class="empty">Loading...</div></td></tr></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- WA POPUP -->
+<div class="wa-pop" id="waPop">
+  <h4>📱 Send WhatsApp?</h4>
+  <p id="waPopMsg">Status updated</p>
+  <div class="wa-pop-btns">
+    <a id="waPopLink" href="#" target="_blank" onclick="document.getElementById('waPop').style.display='none'">📲 Send</a>
+    <button onclick="document.getElementById('waPop').style.display='none'">Skip</button>
+  </div>
+</div>
+
 <script>
-// Auto redirect to owner after 2 seconds
-setTimeout(()=>window.location.href='/owner', 2000);
+let curPane='dashboard';
+
+function getCSRF(){
+  try{for(const c of document.cookie.split(';')) {const t=c.trim();if(t.startsWith('csrf_token=')){const v=decodeURIComponent(t.substring(11));if(v&&v!=='fetch')return v;}} }catch(e){}
+  return 'fetch';
+}
+
+async function API(path){
+  const r=await fetch('/api/resource/'+path,{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}});
+  if(!r.ok)throw new Error(r.status);
+  return r.json();
+}
+
+async function doLogin(){
+  const email=document.getElementById('lEmail').value;
+  const pass=document.getElementById('lPass').value;
+  const err=document.getElementById('lErr');
+  try{
+    const r=await fetch('/api/method/login',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':getCSRF(),'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({usr:email,pwd:pass})});
+    const d=await r.json();
+    if(d.message==='Logged In'||r.ok){
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('uName').textContent=email;
+      loadDashboard();
+    }else{err.textContent='Invalid credentials';err.style.display='block';}
+  }catch(e){err.textContent='Error: '+e.message;err.style.display='block';}
+}
+async function doLogout(){await fetch('/api/method/logout',{method:'POST'});location.reload();}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+fetch('/api/method/frappe.auth.get_logged_user',{headers:{'Accept':'application/json'}}).then(r=>r.json()).then(d=>{
+  if(d.message&&d.message!=='Guest'){document.getElementById('loginScreen').style.display='none';document.getElementById('uName').textContent=d.message;loadDashboard();}
+}).catch(()=>{});
+
+function nav(pane,btn){
+  document.querySelectorAll('.sb-link').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  if(btn)btn.classList.add('active');
+  const el=document.getElementById('pane-'+pane);if(el)el.classList.add('on');
+  curPane=pane;
+  const t={dashboard:'Dashboard',appointments:'Appointments',customers:'Customers',services:'Services',staff:'Stylists',invoices:'Billing'};
+  document.getElementById('pgTitle').textContent='🌸 '+( t[pane]||pane);
+  loadCurrent();
+}
+function loadCurrent(){
+  ({dashboard:loadDashboard,appointments:loadAppointments,customers:loadCustomers,services:loadServices,staff:loadStaff,invoices:loadInvoices}[curPane]||loadDashboard)();
+}
+function stBadge(s){const m={Booked:'b-booked',Confirmed:'b-confirmed',Completed:'b-completed',Cancelled:'b-cancelled'};return `<span class="badge ${m[s]||'b-booked'}">${s||'Booked'}</span>`;}
+
+async function loadDashboard(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const [ap,cu,st]=await Promise.all([
+      API('Appointment?fields=["name"]&filters=[["appointment_date","=","'+today+'"]]&limit=100').catch(()=>({data:[]})),
+      API('BP Customer?fields=["name"]&limit=1').catch(()=>({data:[]})),
+      API('Stylist?fields=["name"]&limit=1').catch(()=>({data:[]})),
+    ]);
+    document.getElementById('st1').textContent=(ap.data||[]).length;
+    document.getElementById('st3').textContent=cu.data_count||0;
+    document.getElementById('st4').textContent=st.data_count||0;
+    // Recent
+    const ra=await API('Appointment?fields=["patient_name","custom_customer_name","practitioner","status","appointment_date","appointment_type"]&limit=10&order_by=appointment_date desc').catch(()=>({data:[]}));
+    const tb=document.getElementById('recentAppts');
+    const list=ra.data||[];
+    if(!list.length){tb.innerHTML='<tr><td colspan="4"><div class="empty">No appointments today</div></td></tr>';return;}
+    tb.innerHTML=list.map(a=>`<tr><td><b>${a.patient_name||a.custom_customer_name||'—'}</b></td><td>${a.appointment_type||'—'}</td><td>${a.appointment_date||'—'}</td><td>${stBadge(a.status)}</td></tr>`).join('');
+  }catch(e){console.error('Dashboard error:',e);}
+}
+
+async function loadAppointments(){
+  try{
+    const r=await API('Appointment?fields=["name","patient_name","custom_customer_name","practitioner","appointment_type","appointment_date","appointment_time","status"]&limit=200&order_by=appointment_date desc');
+    const list=r.data||[];
+    const tb=document.getElementById('apptBody');
+    if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No appointments found</div></td></tr>';return;}
+    tb.innerHTML=list.map(a=>`<tr>
+      <td><b>${a.patient_name||a.custom_customer_name||'—'}</b></td>
+      <td>${a.practitioner||'—'}</td><td>${a.appointment_type||'—'}</td>
+      <td>${a.appointment_date||'—'}</td><td>${(a.appointment_time||'').slice(0,5)||'—'}</td>
+      <td>${stBadge(a.status)}</td>
+      <td><button class="act-btn" onclick="window.open('/app/appointment/'+'${a.name}','_blank')">View</button></td>
+    </tr>`).join('');
+  }catch(e){document.getElementById('apptBody').innerHTML='<tr><td colspan="7"><div class="empty">Error: '+e.message+'</div></td></tr>';}
+}
+
+async function loadCustomers(){
+  try{
+    const r=await API('BP Customer?fields=["name","customer_name","phone","email","total_visits"]&limit=200');
+    const list=r.data||[];
+    const tb=document.getElementById('custBody');
+    if(!list.length){tb.innerHTML='<tr><td colspan="4"><div class="empty">No customers found</div></td></tr>';return;}
+    tb.innerHTML=list.map(c=>`<tr><td><b>${c.customer_name||c.name}</b></td><td>${c.phone||'—'}</td><td>${c.email||'—'}</td><td>${c.total_visits||0}</td></tr>`).join('');
+  }catch(e){document.getElementById('custBody').innerHTML='<tr><td colspan="4"><div class="empty">Error: '+e.message+'</div></td></tr>';}
+}
+
+async function loadServices(){
+  try{
+    const r=await API('BP Service?fields=["name","service_name","category","rate","duration"]&limit=100').catch(()=>API('Salon Service?fields=["service_name","category","price","duration_minutes"]&limit=100'));
+    const list=r.data||[];
+    const tb=document.getElementById('svcBody');
+    if(!list.length){tb.innerHTML='<tr><td colspan="4"><div class="empty">No services found</div></td></tr>';return;}
+    tb.innerHTML=list.map(s=>`<tr><td><b>${s.service_name||s.name}</b></td><td>${s.category||'—'}</td><td>₹${s.rate||s.price||0}</td><td>${s.duration||s.duration_minutes||0} mins</td></tr>`).join('');
+  }catch(e){document.getElementById('svcBody').innerHTML='<tr><td colspan="4"><div class="empty">Error: '+e.message+'</div></td></tr>';}
+}
+
+async function loadStaff(){
+  try{
+    const r=await API('Stylist?fields=["name","stylist_name","specialization","mobile_number"]&limit=50');
+    const list=r.data||[];
+    const tb=document.getElementById('staffBody');
+    if(!list.length){tb.innerHTML='<tr><td colspan="3"><div class="empty">No stylists found</div></td></tr>';return;}
+    tb.innerHTML=list.map(s=>`<tr><td><b>${s.stylist_name||s.name}</b></td><td>${s.specialization||'—'}</td><td>${s.mobile_number||'—'}</td></tr>`).join('');
+  }catch(e){document.getElementById('staffBody').innerHTML='<tr><td colspan="3"><div class="empty">Error: '+e.message+'</div></td></tr>';}
+}
+
+async function loadInvoices(){
+  try{
+    const r=await API('BP Invoice?fields=["name","customer_name","posting_date","grand_total","payment_status"]&limit=200&order_by=posting_date desc').catch(()=>({data:[]}));
+    const list=r.data||[];
+    const tb=document.getElementById('invBody');
+    if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">No invoices found</div></td></tr>';return;}
+    tb.innerHTML=list.map(i=>`<tr>
+      <td style="font-family:monospace;font-size:.78em;color:var(--p)">${i.name}</td>
+      <td>${i.customer_name||'—'}</td><td>${i.posting_date||'—'}</td>
+      <td style="font-weight:700;color:var(--p)">₹${Number(i.grand_total||0).toLocaleString('en-IN')}</td>
+      <td><span class="badge ${i.payment_status==='Paid'?'b-paid':'b-unpaid'}">${i.payment_status||'Unpaid'}</span></td>
+      <td><button class="act-btn" onclick="window.open('/app/bp-invoice/'+'${i.name}','_blank')">View</button></td>
+    </tr>`).join('');
+  }catch(e){document.getElementById('invBody').innerHTML='<tr><td colspan="6"><div class="empty">Error: '+e.message+'</div></td></tr>';}
+}
 </script>
 </body>
 </html>

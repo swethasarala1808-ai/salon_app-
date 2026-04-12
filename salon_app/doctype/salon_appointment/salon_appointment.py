@@ -15,30 +15,36 @@ class SalonAppointment(frappe.model.document.Document):
 def _auto_create_customer(appt):
     if not (appt.customer_name and appt.customer_phone):
         return
-    if not frappe.db.get_value("Salon Customer", {"phone": appt.customer_phone}, "name"):
-        try:
+    try:
+        if not frappe.db.get_value("Salon Customer", {"phone": appt.customer_phone}, "name"):
             frappe.get_doc({
                 "doctype": "Salon Customer",
                 "full_name": appt.customer_name,
                 "phone": appt.customer_phone,
-                "salon_type": appt.salon_type
+                "salon_type": appt.salon_type or "Unisex"
             }).insert(ignore_permissions=True)
             frappe.db.commit()
-        except Exception:
-            pass
+    except Exception as e:
+        frappe.log_error(str(e), "Auto Create Customer Error")
 
 
 def _auto_create_invoice(appt):
-    if frappe.db.get_value("Salon Invoice", {"appointment": appt.name}, "name"):
-        return
     try:
-        price = flt(frappe.db.get_value("Salon Service", appt.service, "price") or 0)
+        if frappe.db.get_value("Salon Invoice", {"appointment": appt.name}, "name"):
+            return
+        # Get price from service
+        price = 0
+        if appt.service:
+            try:
+                price = flt(frappe.db.get_value("Salon Service", appt.service, "price") or 0)
+            except Exception:
+                price = 0
         frappe.get_doc({
             "doctype": "Salon Invoice",
             "customer_name": appt.customer_name,
             "appointment": appt.name,
-            "salon_type": appt.salon_type,
-            "service": appt.service,
+            "salon_type": appt.salon_type or "Unisex",
+            "service": appt.service or "",
             "stylist": appt.stylist or "",
             "invoice_date": nowdate(),
             "subtotal": price,
@@ -47,43 +53,50 @@ def _auto_create_invoice(appt):
         }).insert(ignore_permissions=True)
         frappe.db.commit()
     except Exception as e:
-        frappe.log_error(str(e), "Salon Invoice Auto-create Error")
+        frappe.log_error(str(e), "Auto Create Invoice Error")
 
 
-def _build_wa_message(appt, status):
+def _build_wa_msg(appt, status):
     name = appt.customer_name or "Customer"
     service = appt.service or "service"
     date = str(appt.appointment_date or "")
     time = str(appt.appointment_time or "")[:5]
     salon = appt.salon_type or "Salon"
     try:
-        phone_contact = frappe.db.get_single_value("Salon Settings", "phone") or "+91 98765 43210"
+        ph = frappe.db.get_single_value("Salon Settings", "phone") or "+91 98765 43210"
         upi = frappe.db.get_single_value("Salon Settings", "upi_id") or "salon@upi"
     except Exception:
-        phone_contact = "+91 98765 43210"
+        ph = "+91 98765 43210"
         upi = "salon@upi"
-    price = flt(frappe.db.get_value("Salon Service", service, "price") or 0)
+    price = 0
+    if service:
+        try:
+            price = flt(frappe.db.get_value("Salon Service", service, "price") or 0)
+        except Exception:
+            price = 0
 
     if status == "Booked":
-        return (f"*Appointment Booked!*\n\nDear *{name}*,\n\n"
+        return (f"*Appointment Booked!*\n\nDear *{name}*,\n"
                 f"Your *{salon} Salon* appointment is received!\n\n"
-                f"Date: *{date}*\nTime: *{time}*\nService: *{service}*\n\n"
-                f"We will confirm shortly. Call: *{phone_contact}*\n\nThank you!")
+                f"Date: *{date}* | Time: *{time}*\nService: *{service}*\n\n"
+                f"We will confirm shortly.\nCall: *{ph}*\n\nThank you!")
     elif status == "Confirmed":
-        upi_link = f"upi://pay?pa={urllib.parse.quote(upi)}&pn={salon}+Salon&am={int(price)}&cu=INR"
-        return (f"*Appointment Confirmed!*\n\nDear *{name}*,\n\n"
+        upi_link = f"upi://pay?pa={urllib.parse.quote(upi)}&pn={urllib.parse.quote(salon+' Salon')}&am={int(price)}&cu=INR"
+        return (f"*Appointment Confirmed!*\n\nDear *{name}*,\n"
                 f"Your *{salon} Salon* booking is confirmed!\n\n"
-                f"Date: *{date}*\nTime: *{time}*\nService: *{service}*\n"
+                f"Date: *{date}* | Time: *{time}*\nService: *{service}*\n"
                 f"Amount: *Rs.{int(price)}*\n\n"
-                f"Pay Now: {upi_link}\nUPI ID: *{upi}*\n\nSee you soon!")
+                f"Pay Now (UPI): {upi_link}\n"
+                f"UPI ID: *{upi}*\n\nSee you soon!")
     elif status == "Completed":
         return (f"*Thank You {name}!*\n\n"
-                f"Your *{service}* is complete! Hope you loved it.\n\n"
-                f"Book again: {phone_contact}")
+                f"Your *{service}* session is complete!\n"
+                f"Hope you loved it. Book again: *{ph}*")
     elif status == "Cancelled":
         return (f"*Appointment Cancelled*\n\nDear *{name}*,\n"
-                f"Your *{service}* on *{date}* has been cancelled.\nRebook: {phone_contact}")
-    return f"Hi {name}, update from {salon} Salon!"
+                f"Your *{service}* on *{date}* has been cancelled.\n"
+                f"Rebook anytime: *{ph}*")
+    return f"Hi {name}, update from {salon} Salon."
 
 
 @frappe.whitelist()
@@ -102,7 +115,7 @@ def update_appointment_status(appointment_name, new_status):
         wa_link = None
         phone = appt.customer_phone or ""
         if phone:
-            msg = _build_wa_message(appt, new_status)
+            msg = _build_wa_msg(appt, new_status)
             digits = "".join(filter(str.isdigit, phone))
             if len(digits) == 10:
                 digits = "91" + digits

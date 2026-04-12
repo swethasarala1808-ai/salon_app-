@@ -2,55 +2,47 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Unisex Salon | Luminescent Atelier</title>
+<title>Unisex Salon | Book Appointment</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;0,900;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <style>
-.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--p:#14F1B1;--b:#114EFF;--dark:#030e1f;--card:#0b1a2e;--border:rgba(61,72,92,.4);--text:#dae6fe;--muted:#a0abc2;--grad:linear-gradient(135deg,#14F1B1,#114EFF)}
 body{font-family:'Manrope',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
-header{position:sticky;top:0;z-index:100;background:rgba(11,26,46,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+header{position:sticky;top:0;z-index:100;background:rgba(11,26,46,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-family:'Noto Serif',serif;font-size:1.2em;color:var(--p);font-weight:700}
 .badge{background:var(--grad);color:#003;font-size:.62em;padding:2px 10px;border-radius:20px;font-weight:800;margin-left:6px;vertical-align:middle}
-.nav-links{display:flex;gap:18px;align-items:center}
+.nav-links{display:flex;gap:16px;align-items:center}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:.85em;transition:color .2s}
-.nav-links a:hover,.nav-links a:focus{color:var(--p)}
+.nav-links a:hover{color:var(--p)}
 .nav-book{background:var(--grad)!important;color:#003!important;padding:8px 18px;border-radius:8px;font-weight:700!important}
-.hero{min-height:80vh;display:flex;align-items:flex-end;padding:100px 20px 50px;position:relative;overflow:hidden;background:linear-gradient(150deg,#030e1f 0%,#060f1f 50%,#091526 100%)}
-.hero-glow{position:absolute;top:-150px;right:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(17,78,255,.15),transparent 70%);pointer-events:none}
-.hero-glow2{position:absolute;bottom:-80px;left:-80px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(20,241,177,.08),transparent 70%);pointer-events:none}
-.hero-inner{position:relative;z-index:2;max-width:700px}
+.hero{min-height:75vh;display:flex;align-items:flex-end;padding:100px 20px 50px;position:relative;overflow:hidden;background:linear-gradient(150deg,#030e1f,#060f1f,#091526)}
+.hglow{position:absolute;top:-150px;right:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(17,78,255,.15),transparent 70%);pointer-events:none}
+.hinner{position:relative;z-index:2;max-width:700px}
 .htag{display:inline-flex;align-items:center;gap:6px;background:rgba(20,241,177,.1);border:1px solid rgba(20,241,177,.25);border-radius:6px;padding:5px 12px;margin-bottom:18px;font-size:.72em;color:var(--p);font-weight:700;letter-spacing:2px;text-transform:uppercase}
 .hero h1{font-family:'Noto Serif',serif;font-size:clamp(2.4em,5vw,4em);line-height:1.06;margin-bottom:14px;font-weight:900}
 .hero h1 em{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:italic}
 .hero p{color:var(--muted);line-height:1.8;max-width:480px;margin-bottom:30px;font-size:.95em}
 .hbtns{display:flex;gap:12px;flex-wrap:wrap}
-.btn-g{background:var(--grad);color:#003;padding:13px 30px;border-radius:10px;font-weight:800;font-size:.88em;text-decoration:none;border:none;cursor:pointer;display:inline-block;transition:opacity .2s,transform .2s}
+.btn-g{background:var(--grad);color:#003;padding:13px 30px;border-radius:10px;font-weight:800;font-size:.88em;text-decoration:none;border:none;cursor:pointer;display:inline-block;transition:all .2s}
 .btn-g:hover{opacity:.9;transform:translateY(-2px)}
 .btn-o{border:1px solid rgba(20,241,177,.3);color:var(--p);padding:13px 30px;border-radius:10px;font-weight:600;font-size:.88em;text-decoration:none;transition:all .2s;display:inline-block}
 .btn-o:hover{background:rgba(20,241,177,.08)}
-.stats{display:flex;gap:24px;flex-wrap:wrap;margin:28px 20px 0;padding:18px 22px;background:rgba(11,26,46,.6);border:1px solid var(--border);border-radius:14px}
-.stat .n{font-family:'Noto Serif',serif;font-size:1.8em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;font-weight:900}
-.stat .l{font-size:.72em;color:var(--muted);letter-spacing:.5px}
 .sec{padding:56px 20px}.sec-inner{max-width:1100px;margin:0 auto}
 .sec-lbl{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.7em;letter-spacing:3px;text-transform:uppercase;color:var(--p);font-weight:700}
 .sec-lbl::before{content:'';width:18px;height:2px;background:var(--grad)}
 .sec-inner h2{font-family:'Noto Serif',serif;font-size:clamp(1.6em,3.5vw,2.4em);font-weight:900;margin-bottom:6px}
-.sec-inner>p{color:var(--muted);font-size:.88em;margin-bottom:28px}
-.cats{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:24px;scrollbar-width:none}
+.sec-inner>p{color:var(--muted);font-size:.88em;margin-bottom:24px}
+.cats{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:20px;scrollbar-width:none}
 .cats::-webkit-scrollbar{display:none}
-.cat{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
-.cat-ico{width:56px;height:56px;border-radius:12px;background:rgba(16,32,54,.8);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.cat{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:4px}
+.cat-ico{width:52px;height:52px;border-radius:12px;background:rgba(16,32,54,.8);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3em;transition:all .2s}
 .cat.active .cat-ico,.cat:hover .cat-ico{background:var(--grad);border-color:transparent}
-.cat.active .cat-ico .material-symbols-outlined,.cat:hover .cat-ico .material-symbols-outlined{color:#003!important}
-.cat-ico .material-symbols-outlined{color:var(--p);font-size:26px}
 .cat-lbl{font-size:.65em;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
 .cat.active .cat-lbl{color:var(--p)}
-.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
 .srv{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:all .25s;text-decoration:none;display:block;position:relative;overflow:hidden}
 .srv::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity .25s}
-.srv:hover{background:rgba(17,78,255,.08);border-color:rgba(17,78,255,.4);transform:translateY(-3px);box-shadow:0 14px 36px rgba(17,78,255,.14)}
+.srv:hover{background:rgba(17,78,255,.08);border-color:rgba(17,78,255,.4);transform:translateY(-3px)}
 .srv:hover::before{opacity:1}
 .srv-ic{font-size:1.8em;margin-bottom:12px;display:block}
 .srv h3{font-family:'Noto Serif',serif;font-size:1.05em;margin-bottom:5px;font-weight:700}
@@ -60,13 +52,13 @@ header{position:sticky;top:0;z-index:100;background:rgba(11,26,46,.85);backdrop-
 .srv-dr{color:var(--muted);font-size:.76em}
 .bk-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:50px;align-items:start}
 .bk-info h2{font-family:'Noto Serif',serif;font-size:2.2em;font-weight:900;margin-bottom:12px}
-.bk-info>p{color:var(--muted);line-height:1.8;margin-bottom:26px;font-size:.9em}
+.bk-info>p{color:var(--muted);line-height:1.8;margin-bottom:24px;font-size:.9em}
 .pm{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
-.pm-ico{width:34px;height:34px;border-radius:8px;background:rgba(20,241,177,.08);border:1px solid rgba(20,241,177,.2);display:flex;align-items:center;justify-content:center;font-size:.85em;flex-shrink:0}
+.pm-ico{width:34px;height:34px;border-radius:8px;background:rgba(20,241,177,.08);border:1px solid rgba(20,241,177,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .pm h4{color:var(--p);font-size:.82em;font-weight:700;margin-bottom:1px}
 .pm p{color:var(--muted);font-size:.76em;line-height:1.4}
-.bk-card{background:rgba(11,26,46,.8);border:1px solid var(--border);border-radius:18px;padding:32px}
-.bk-card h3{font-family:'Noto Serif',serif;font-size:1.4em;font-weight:700;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.bk-card{background:rgba(11,26,46,.8);border:1px solid var(--border);border-radius:18px;padding:28px}
+.bk-card h3{font-family:'Noto Serif',serif;font-size:1.3em;font-weight:700;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .frow.one{grid-template-columns:1fr}
 .fg label{display:block;font-size:.68em;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
@@ -74,9 +66,11 @@ header{position:sticky;top:0;z-index:100;background:rgba(11,26,46,.85);backdrop-
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--p)}
 .fg select option{background:#0b1a2e}
 .fg textarea{min-height:60px;resize:vertical}
+.sel-note{font-size:.75em;color:var(--p);margin-top:4px;display:none}
+.sel-note.show{display:block}
 .btn-sub{width:100%;padding:13px;background:var(--grad);color:#003;border:none;border-radius:9px;font-family:'Manrope',sans-serif;font-weight:800;font-size:.88em;cursor:pointer;margin-top:6px;transition:all .25s}
 .btn-sub:hover{opacity:.9;transform:translateY(-1px)}
-.btn-sub:disabled{opacity:.5;cursor:wait}
+.btn-sub:disabled{opacity:.5;cursor:wait;transform:none}
 .succ{display:none;text-align:center;padding:28px}
 .succ h4{font-family:'Noto Serif',serif;font-size:1.4em;color:var(--p);margin:12px 0 8px}
 .succ p{color:var(--muted);font-size:.86em;line-height:1.7}
@@ -91,7 +85,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(11,26,46,.85);backdrop-
 .p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
 .p-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:8px;transition:all .25s;position:relative;overflow:hidden}
 .p-card:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(17,78,255,.1);border-color:rgba(17,78,255,.4)}
-.p-card.hot{background:linear-gradient(160deg,#060f20,#091526);border-color:var(--p)}
+.p-card.hot{border-color:var(--p)}
 .p-card.hot::before{content:'Popular';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--grad);color:#003;font-size:.6em;padding:2px 12px;border-radius:20px;font-weight:800}
 .p-name{font-family:'Noto Serif',serif;font-size:1.2em;font-weight:700;margin-top:4px}
 .p-price{font-size:2em;font-family:'Noto Serif',serif;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:900;line-height:1}
@@ -102,74 +96,66 @@ header{position:sticky;top:0;z-index:100;background:rgba(11,26,46,.85);backdrop-
 .p-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--grad);flex-shrink:0;margin-top:4px}
 .p-btn{display:block;text-align:center;background:var(--grad);color:#003;padding:11px;border-radius:8px;font-weight:800;font-size:.8em;border:none;cursor:pointer;margin-top:auto;text-decoration:none;transition:opacity .2s}
 .p-btn:hover{opacity:.88}
-footer{background:#020b18;border-top:1px solid var(--border);padding:40px 20px}
-.ft{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
-.ft-brand{font-family:'Noto Serif',serif;font-size:1.1em;color:var(--p);font-weight:700}
-.ft-links{display:flex;gap:16px;flex-wrap:wrap}
-.ft-links a{color:var(--muted);text-decoration:none;font-size:.8em;transition:color .2s}
-.ft-links a:hover{color:var(--p)}
-.ft-copy{color:rgba(255,255,255,.18);font-size:.76em}
-.wa{position:fixed;bottom:20px;right:20px;z-index:400;width:50px;height:50px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(37,211,102,.4);text-decoration:none;font-size:1.4em;transition:transform .2s}
+footer{background:#020b18;border-top:1px solid var(--border);padding:32px 20px;text-align:center}
+.ft-brand{font-family:'Noto Serif',serif;font-size:1.1em;color:var(--p);font-weight:700;margin-bottom:8px}
+.ft-info{color:var(--muted);font-size:.8em;line-height:1.8}
+.wa{position:fixed;bottom:20px;right:20px;z-index:400;width:50px;height:50px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(37,211,102,.4);text-decoration:none;font-size:1.4em;transition:transform .2s;animation:pulse 2.5s infinite}
 .wa:hover{transform:scale(1.1)}
+@keyframes pulse{0%,100%{box-shadow:0 6px 18px rgba(37,211,102,.4)}50%{box-shadow:0 6px 28px rgba(37,211,102,.65)}}
+.err-msg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#f87171;padding:10px 14px;border-radius:8px;font-size:.8em;margin-top:8px;display:none}
+.err-msg.show{display:block}
 @media(max-width:900px){.bk-wrap{grid-template-columns:1fr}}
-@media(max-width:600px){.frow{grid-template-columns:1fr}.hero h1{font-size:2.2em}.stats{gap:16px}}
+@media(max-width:600px){.frow{grid-template-columns:1fr}.hero h1{font-size:2.2em}}
 </style>
 </head>
 <body>
 <header>
-  <div><span class="logo">✂ Unisex Salon</span><span class="badge">UNISEX</span></div>
+  <div><span class="logo">✨ Unisex Salon</span><span class="badge">UNISEX</span></div>
   <div class="nav-links">
-    <a href="#services">Services</a><a href="#team">Barbers</a>
-    <a href="#packages">Packages</a><a href="#booking" class="nav-book">Book Now</a>
-    <a href="/" style="color:var(--muted);font-size:.8em">← Home</a>
+    <a href="#services">Services</a>
+    <a href="#team">Barbers</a>
+    <a href="#packages">Packages</a>
+    <a href="#booking" class="nav-book">Book Now</a>
   </div>
 </header>
 
 <section class="hero">
-  <div class="hero-glow"></div><div class="hero-glow2"></div>
-  <div class="hero-inner">
-    <div class="htag"><span class="material-symbols-outlined" style="font-size:15px">content_cut</span>Unisex — All Welcome</div>
+  <div class="hglow"></div>
+  <div class="hinner">
+    <div class="htag">✂ Unisex — All Welcome</div>
     <h1>Everyone<br><em>Belongs Here.</em></h1>
-    <p>Hair spa, keratin, massage and all beauty services for everyone — no labels, just great care.</p>
+    <p>Hair spa, keratin, massage and all services for everyone — no labels, just great care.</p>
     <div class="hbtns">
       <a href="#booking" class="btn-g">Book Appointment</a>
       <a href="#services" class="btn-o">View Services</a>
     </div>
   </div>
 </section>
-<div class="stats" id="statsBar">
-  <div class="stat"><span class="n" id="sc">500+</span><span class="l">Happy Clients</span></div>
-  <div class="stat"><span class="n" id="ss">6</span><span class="l">Expert Stylists</span></div>
-  <div class="stat"><span class="n">4.9★</span><span class="l">Rating</span></div>
-  <div class="stat"><span class="n" id="sv">9+</span><span class="l">Services</span></div>
-</div>
 
 <section class="sec" id="services" style="background:#050e1e">
   <div class="sec-inner">
     <div class="sec-lbl">All Services</div>
     <h2>What We Offer</h2>
-    <p>Click any service to pre-fill your booking form</p>
+    <p>Click any service to pre-fill your booking form instantly</p>
     <div class="cats" id="catsBar">
-      <div class="cat active" onclick="filterCat('all',this)">
-        <div class="cat-ico"><span class="material-symbols-outlined">apps</span></div><span class="cat-lbl">All</span>
-      </div>
+      <div class="cat active" onclick="filterCat('all',this)"><div class="cat-ico">🏪</div><span class="cat-lbl">All</span></div>
     </div>
     <div class="grid3" id="srvGrid"><div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--muted)">Loading services...</div></div>
   </div>
 </section>
 
-<section class="sec booking-sec" id="booking" style="background:linear-gradient(150deg,#030e1f,#060f20,#0a1428)">
+<section class="sec" id="booking" style="background:linear-gradient(150deg,#030e1f,#060f20,#0a1428)">
   <div class="sec-inner">
     <div class="bk-wrap">
       <div class="bk-info">
         <div class="sec-lbl">Reserve Your Slot</div>
         <h2>Book Your Appointment</h2>
-        <p>Fill the form and we call within 30 minutes to confirm.</p>
-        <div class="pm"><div class="pm-ico">📞</div><div><h4>Quick Confirmation</h4><p>We call within 30 min</p></div></div>
-        <div class="pm"><div class="pm-ico">💳</div><div><h4>Pay After Service</h4><p>No advance required</p></div></div>
-        <div class="pm"><div class="pm-ico">🔄</div><div><h4>Free Rescheduling</h4><p>Cancel anytime before service</p></div></div>
+        <p>Fill the form and we will call within 30 minutes to confirm your slot.</p>
+        <div class="pm"><div class="pm-ico">📞</div><div><h4>Quick Confirmation</h4><p>We call within 30 minutes</p></div></div>
+        <div class="pm"><div class="pm-ico">💳</div><div><h4>Pay After Service</h4><p>No advance payment required</p></div></div>
+        <div class="pm"><div class="pm-ico">🔄</div><div><h4>Free Rescheduling</h4><p>Cancel or change anytime</p></div></div>
         <div class="pm"><div class="pm-ico">✂️</div><div><h4>Expert Stylists</h4><p>Certified professionals</p></div></div>
-        <div style="margin-top:20px;padding:14px;background:rgba(20,241,177,.04);border:1px solid rgba(20,241,177,.12);border-radius:10px;font-size:.78em;color:var(--muted)" id="infoCont">📞 +91 98765 43210 | 🕐 9 AM - 8 PM</div>
+        <div style="margin-top:20px;padding:14px;background:rgba(20,241,177,.04);border:1px solid rgba(20,241,177,.12);border-radius:10px;font-size:.78em;color:var(--muted)" id="infoCont">📞 Loading...</div>
       </div>
       <div class="bk-card">
         <h3>Book Appointment</h3>
@@ -178,9 +164,18 @@ footer{background:#020b18;border-top:1px solid var(--border);padding:40px 20px}
             <div class="fg"><label>Full Name *</label><input id="b-name" type="text" placeholder="Your full name" required></div>
             <div class="fg"><label>Phone *</label><input id="b-phone" type="tel" placeholder="10-digit mobile" required></div>
           </div>
-          <div class="frow">
-            <div class="fg"><label>Service *</label><select id="b-svc" required><option value="">Loading...</option></select></div>
-            <div class="fg"><label>Barber</label><select id="b-styl"><option value="">Any barber</option></select></div>
+          <div class="frow one">
+            <div class="fg">
+              <label>Service *</label>
+              <select id="b-svc" required onchange="onSvcChange()"><option value="">Loading services...</option></select>
+              <div class="sel-note" id="svc-note">✓ Service selected from catalog</div>
+            </div>
+          </div>
+          <div class="frow one">
+            <div class="fg">
+              <label>Stylist</label>
+              <select id="b-styl"><option value="">Any available stylist</option></select>
+            </div>
           </div>
           <div class="frow">
             <div class="fg"><label>Date *</label><input id="b-date" type="date" required></div>
@@ -196,13 +191,14 @@ footer{background:#020b18;border-top:1px solid var(--border);padding:40px 20px}
               </select>
             </div>
           </div>
-          <div class="frow one"><div class="fg"><label>Notes</label><textarea id="b-notes" placeholder="Style preferences..."></textarea></div></div>
+          <div class="frow one"><div class="fg"><label>Notes</label><textarea id="b-notes" placeholder="Style preferences, special requests..."></textarea></div></div>
+          <div class="err-msg" id="bookErr"></div>
           <button type="button" class="btn-sub" id="b-sub" onclick="doBook()">✦ Book Appointment</button>
         </form>
         <div class="succ" id="succPanel">
           <div style="font-size:2.5em">💈</div>
           <h4>Booking Confirmed!</h4>
-          <p>Hi <strong id="cn"></strong>! We'll call you shortly.<br>Service: <strong id="cs"></strong></p>
+          <p>Hi <strong id="cn"></strong>! We will call you shortly.<br>Service: <strong id="cs"></strong></p>
           <div class="sref" id="cr"></div><br><br>
           <button onclick="resetForm()" style="background:rgba(20,241,177,.08);color:var(--p);border:1px solid rgba(20,241,177,.2);padding:9px 22px;border-radius:8px;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:600">Book Another →</button>
         </div>
@@ -223,77 +219,181 @@ footer{background:#020b18;border-top:1px solid var(--border);padding:40px 20px}
   <div class="sec-inner">
     <div class="sec-lbl">Value Deals</div>
     <h2>Unisex Packages</h2>
+    <p>Click "Book Now" on any package to auto-fill your booking form</p>
     <div class="p-grid" id="pkgGrid"><div style="text-align:center;padding:40px;color:var(--muted)">Loading packages...</div></div>
   </div>
 </section>
 
 <footer>
-  <div class="ft">
-    <div class="ft-brand">✂ Unisex Salon</div>
-    <div class="ft-links">
-      <a href="#services">Services</a><a href="#team">Team</a><a href="#packages">Packages</a>
-      <a href="/salon-dashboard">Owner Dashboard</a><a href="/">All Salons</a>
-    </div>
-    <div class="ft-copy">© 2026 Luminescent Atelier</div>
-  </div>
+  <div class="ft-brand">✂ Unisex Salon</div>
+  <div class="ft-info" id="ftInfo">📞 +91 98765 43210 &nbsp;|&nbsp; 🕐 9 AM - 8 PM Daily</div>
 </footer>
-<a href="#" class="wa" id="waF">💬</a>
+<a href="#" class="wa" id="waF" title="Chat on WhatsApp">💬</a>
 
 <script>
-const ST='Unisex',API='/api/method/salon_app.api';
+const ST='Unisex';
+const BASE='/api/method/salon_app.api';
 document.getElementById('b-date').min=new Date().toISOString().split('T')[0];
-const IC={'haircut':'✂️','beard':'🧔','shave':'🪒','facial':'✨','color':'🎨','massage':'💆','hair':'💇','default':'💈'};
+
+const IC={'haircut':'✂️','beard':'🧔','shave':'🪒','facial':'✨','color':'🎨','massage':'💆','hair':'💇','grooming':'💈','nail':'💅','wax':'🌸','thread':'🧵','bridal':'👰','makeup':'💄','spa':'🛁','keratin':'🌿','default':'💈'};
 function ico(n){const l=(n||'').toLowerCase();for(const[k,v]of Object.entries(IC))if(l.includes(k))return v;return IC.default;}
-async function api(m,p={}){
+
+// Robust API call - GET method for whitelisted guest APIs
+async function callAPI(method, params={}){
   try{
-    const qs=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
-    const r=await fetch(`${API}.${m}${qs?'?'+qs:''}`,{
-      headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch','X-Requested-With':'XMLHttpRequest'}
-    });
-    if(!r.ok){console.error('API error',m,r.status);return [];}
+    const qs=Object.entries(params).filter(([k,v])=>v!=null&&v!=='').map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+    const url=`${BASE}.${method}${qs?'?'+qs:''}`;
+    const r=await fetch(url,{headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'}});
+    if(!r.ok){console.error('API',method,r.status);return [];}
     const d=await r.json();
     return d.message||[];
-  }catch(e){console.error('API fetch error',m,e);return[];}
+  }catch(e){console.error('callAPI',method,e);return [];}
 }
-let allS=[],activeCat='all';
+
+let allS=[], allStaff=[], activeCat='all';
+
+async function loadAll(){
+  await Promise.all([loadSettings(), loadSvcs(), loadTeam(), loadPkgs()]);
+}
+
+async function loadSettings(){
+  const s=await callAPI('get_settings');
+  if(!s||!s.phone)return;
+  const phone=s.phone.replace(/\D/g,'');
+  document.getElementById('waF').href='https://wa.me/'+(phone.length===10?'91'+phone:phone);
+  const info=`📞 ${s.phone} &nbsp;|&nbsp; 🕐 ${s.hours||'9 AM - 8 PM'} &nbsp;|&nbsp; 📍 ${s.address||''}`;
+  document.getElementById('infoCont').innerHTML=info;
+  document.getElementById('ftInfo').innerHTML=info;
+}
+
 async function loadSvcs(){
-  const svcs=await api('get_services',{salon_type:ST});
+  const svcs=await callAPI('get_services',{salon_type:ST});
   allS=svcs;
-  const grid=document.getElementById('srvGrid'),sel=document.getElementById('b-svc');
-  if(!svcs.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--muted)">No Men services found in Frappe. Go to salon.localhost:8000/app/salon-service and add services with Salon Type = Men</div>';sel.innerHTML='<option value="">No services</option>';return;}
+  const grid=document.getElementById('srvGrid');
+  const sel=document.getElementById('b-svc');
+
+  if(!svcs||!svcs.length){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--muted)">No services available yet. Please check back soon.</div>';
+    sel.innerHTML='<option value="">No services available</option>';
+    return;
+  }
+
+  // Category tabs
   const cats=[...new Set(svcs.map(s=>s.category).filter(Boolean))];
   const cb=document.getElementById('catsBar');
-  cats.forEach(c=>{const d=document.createElement('div');d.className='cat';d.onclick=function(){filterCat(c,this);};d.innerHTML=`<div class="cat-ico"><span class="material-symbols-outlined">star</span></div><span class="cat-lbl">${c}</span>`;cb.appendChild(d);});
-  renderS(svcs);
-  sel.innerHTML='<option value="">— Choose service —</option>';
+  cb.innerHTML='<div class="cat active" onclick="filterCat(\'all\',this)"><div class="cat-ico">🏪</div><span class="cat-lbl">All</span></div>';
+  cats.forEach(c=>{
+    const d=document.createElement('div');d.className='cat';
+    d.onclick=function(){filterCat(c,this);};
+    d.innerHTML=`<div class="cat-ico">${ico(c)}</div><span class="cat-lbl">${c}</span>`;
+    cb.appendChild(d);
+  });
+
+  renderSvcs(svcs);
+
+  // Service dropdown - grouped
+  sel.innerHTML='<option value="">— Choose a service —</option>';
   const grp={};svcs.forEach(s=>{const c=s.category||'General';if(!grp[c])grp[c]=[];grp[c].push(s);});
-  Object.entries(grp).forEach(([c,ss])=>{const g=document.createElement('optgroup');g.label=c;ss.forEach(s=>{const o=document.createElement('option');o.value=s.service_name;o.textContent=`${s.service_name} — ₹${Number(s.price).toLocaleString('en-IN')}`;g.appendChild(o);});sel.appendChild(g);});
-  document.getElementById('sv').textContent=svcs.length+'+';
+  Object.entries(grp).forEach(([cat,ss])=>{
+    const g=document.createElement('optgroup');g.label=cat;
+    ss.forEach(s=>{const o=document.createElement('option');o.value=s.service_name;o.textContent=`${s.service_name} — ₹${Number(s.price).toLocaleString('en-IN')} (${s.duration_minutes||30}m)`;g.appendChild(o);});
+    sel.appendChild(g);
+  });
 }
-function renderS(svcs){document.getElementById('srvGrid').innerHTML=svcs.map(s=>`<a class="srv" href="#booking" onclick="setSvc('${s.service_name}')"><span class="srv-ic">${ico(s.service_name)}</span><h3>${s.service_name}</h3><p>${s.description||s.category||'Professional service'}</p><div class="srv-ft"><span class="srv-pr">₹${Number(s.price).toLocaleString('en-IN')}</span><span class="srv-dr">${s.duration_minutes||30} mins</span></div></a>`).join('');}
-function filterCat(c,el){document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));el.classList.add('active');activeCat=c;renderS(c==='all'?allS:allS.filter(s=>s.category===c));}
+
+function renderSvcs(svcs){
+  document.getElementById('srvGrid').innerHTML=svcs.map(s=>`
+    <div class="srv" onclick="setSvc('${s.service_name.replace(/'/g,"\\'")}')">
+      <span class="srv-ic">${ico(s.service_name)}</span>
+      <h3>${s.service_name}</h3>
+      <p>${s.description||s.category||'Professional service'}</p>
+      <div class="srv-ft"><span class="srv-pr">₹${Number(s.price).toLocaleString('en-IN')}</span><span class="srv-dr">${s.duration_minutes||30} mins</span></div>
+    </div>`).join('');
+}
+
+function filterCat(c,el){
+  document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));el.classList.add('active');
+  renderSvcs(c==='all'?allS:allS.filter(s=>s.category===c));
+}
+
+function onSvcChange(){
+  const note=document.getElementById('svc-note');
+  note.classList.toggle('show',!!document.getElementById('b-svc').value);
+}
+
+function setSvc(name){
+  const sel=document.getElementById('b-svc');
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===name){sel.selectedIndex=i;onSvcChange();break;}}
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
+}
+
 async function loadTeam(){
-  const staff=await api('get_staff',{salon_type:ST});
-  const grid=document.getElementById('teamGrid'),sel=document.getElementById('b-styl');
-  if(!staff.length){grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Add staff in Frappe for Men salon type</div>';return;}
-  document.getElementById('ss').textContent=staff.length;
-  sel.innerHTML='<option value="">Any barber</option>'+staff.map(s=>`<option value="${s.staff_name}">${s.staff_name}</option>`).join('');
-  grid.innerHTML=staff.map(s=>`<div class="t-card"><div class="t-av">${s.photo?`<img src="${s.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`:'✂️'}</div><h4>${s.staff_name}</h4><div class="t-role">${s.role||'Barber'}</div><div class="t-exp">${s.specialization||''}</div>${s.experience_years?`<div class="t-exp">${s.experience_years} yrs</div>`:''}</div>`).join('');
+  const staff=await callAPI('get_staff',{salon_type:ST});
+  allStaff=staff||[];
+  const grid=document.getElementById('teamGrid');
+  const sel=document.getElementById('b-styl');
+
+  if(!allStaff.length){
+    grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Our team information will be available soon.</div>';
+    return;
+  }
+
+  // Populate stylist dropdown
+  sel.innerHTML='<option value="">Any available stylist</option>';
+  allStaff.forEach(s=>{
+    const o=document.createElement('option');
+    const sname=s.staff_name||s.name;
+    o.value=sname;
+    o.textContent=sname+(s.role?' — '+s.role:'')+(s.specialization?' ('+s.specialization+')':'');
+    sel.appendChild(o);
+  });
+
+  // Team grid
+  grid.innerHTML=allStaff.map(s=>`
+    <div class="t-card">
+      <div class="t-av">${s.photo?`<img src="${s.photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">` :'✂️'}</div>
+      <h4>${s.staff_name||s.name}</h4>
+      <div class="t-role">${s.role||'Barber'}</div>
+      <div class="t-exp">${s.specialization||''}</div>
+      ${s.experience_years?`<div class="t-exp">${s.experience_years} yrs experience</div>`:''}
+    </div>`).join('');
 }
+
 async function loadPkgs(){
-  const pkgs=await api('get_packages',{salon_type:ST});
+  const pkgs=await callAPI('get_packages',{salon_type:ST});
   const grid=document.getElementById('pkgGrid');
-  if(!pkgs.length){grid.innerHTML=`<div class="p-card hot"><div class="p-name">Quick Groom</div><div class="p-price">₹299</div><div class="p-note">Best value</div><div class="p-div"></div><ul class="p-list"><li>Haircut</li><li>Beard Trim</li><li>Cleanup</li></ul><button class="p-btn" onclick="setSvc('Men Haircut')">Book</button></div><div class="p-card"><div class="p-name">Royal Groom</div><div class="p-price">₹799</div><div class="p-note">Complete package</div><div class="p-div"></div><ul class="p-list"><li>Designer Haircut</li><li>Beard Design</li><li>Facial</li><li>Massage</li></ul><button class="p-btn" onclick="setSvc('Men Haircut')">Book</button></div>`;return;}
-  grid.innerHTML=pkgs.map((p,i)=>`<div class="p-card ${i===0?'hot':''}"><div class="p-name">${p.package_name}</div><div class="p-price">₹${Number(p.price).toLocaleString('en-IN')}</div><div class="p-note">${p.description||''}</div><div class="p-div"></div><ul class="p-list">${(p.services_included||'').split('\n').filter(Boolean).map(s=>`<li>${s.trim()}</li>`).join('')}</ul><button class="p-btn" onclick="setSvc('${p.package_name}')">Book Now</button></div>`).join('');
+  if(!pkgs||!pkgs.length){
+    grid.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted)">Packages coming soon!</div>';
+    return;
+  }
+  grid.innerHTML=pkgs.map((p,i)=>`
+    <div class="p-card ${i===0?'hot':''}">
+      <div class="p-name">${p.package_name}</div>
+      <div class="p-price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+      <div class="p-note">${p.description||''}</div>
+      ${p.validity_days?`<div style="font-size:.73em;color:var(--muted)">Valid for ${p.validity_days} days</div>`:''}
+      <div class="p-div"></div>
+      <ul class="p-list">${(p.services_included||'').split('\n').filter(Boolean).map(s=>`<li>${s.trim()}</li>`).join('')}</ul>
+      <button class="p-btn" onclick="setPkg('${(p.services_included||'').split('\n')[0].trim().replace(/'/g,"\\'")||p.package_name.replace(/'/g,"\\'")}','${p.package_name.replace(/'/g,"\\'")}')">Book Now →</button>
+    </div>`).join('');
 }
-async function loadSettings(){
-  const s=await api('get_settings');
-  if(!s||!s.phone)return;
-  document.getElementById('waF').href='https://wa.me/'+s.phone.replace(/\D/g,'');
-  document.getElementById('infoCont').innerHTML=`📞 ${s.phone} | 🕐 ${s.hours||'9 AM - 8 PM'} | 📍 ${s.address||'Bengaluru'}`;
-  if(s.total_clients)document.getElementById('sc').textContent=s.total_clients+'+';
+
+function setPkg(firstService, pkgName){
+  // Try to match first service in dropdown
+  const sel=document.getElementById('b-svc');
+  let found=false;
+  for(let i=0;i<sel.options.length;i++){
+    if(sel.options[i].value===firstService||sel.options[i].value.toLowerCase().includes(firstService.toLowerCase())){
+      sel.selectedIndex=i;onSvcChange();found=true;break;
+    }
+  }
+  if(!found&&sel.options.length>1){sel.selectedIndex=1;onSvcChange();}
+  // Show package name in notes
+  const notes=document.getElementById('b-notes');
+  notes.value=`Package: ${pkgName}`;
+  document.getElementById('booking').scrollIntoView({behavior:'smooth'});
 }
-function setSvc(n){const sel=document.getElementById('b-svc');for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===n){sel.selectedIndex=i;break;}}document.getElementById('booking').scrollIntoView({behavior:'smooth'});}
+
 async function doBook(){
   const name=document.getElementById('b-name').value.trim();
   const phone=document.getElementById('b-phone').value.trim();
@@ -302,38 +402,43 @@ async function doBook(){
   const date=document.getElementById('b-date').value;
   const time=document.getElementById('b-time').value;
   const notes=document.getElementById('b-notes').value;
-  if(!name||!phone||!svc||!date||!time){alert('Please fill all required fields');return;}
-  if(!/^[6-9]\d{9}$/.test(phone)){alert('Enter valid 10-digit phone');return;}
+  const errEl=document.getElementById('bookErr');
+  errEl.classList.remove('show');
+
+  if(!name||!phone||!svc||!date||!time){errEl.textContent='Please fill all required fields';errEl.classList.add('show');return;}
+  if(!/^[6-9]\d{9}$/.test(phone)){errEl.textContent='Enter valid 10-digit mobile number';errEl.classList.add('show');return;}
+
   const btn=document.getElementById('b-sub');btn.disabled=true;btn.textContent='Booking...';
-  let csrf='fetch';
-  try{document.cookie.split(';').forEach(c=>{if(c.trim().startsWith('csrf_token='))csrf=decodeURIComponent(c.trim().split('=')[1]);});}catch(e){}
+
   try{
-    // First try the whitelisted API method
-    const params=new URLSearchParams({customer_name:name,customer_phone:phone,salon_type:ST,service:svc,stylist:styl,appointment_date:date,appointment_time:time,notes});
-    let r=await fetch('/api/method/salon_app.api.book_appointment?'+params.toString(),{method:'GET',headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch','X-Requested-With':'XMLHttpRequest'}});
-    if(!r.ok){
-      // Fallback: direct resource insert
-      r=await fetch('/api/resource/Salon%20Appointment',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},body:JSON.stringify({customer_name:name,customer_phone:phone,salon_type:ST,service:svc,stylist:styl||null,appointment_date:date,appointment_time:time,status:'Booked',notes})});
-    }
-    const d=await r.json();
-    const apptName=d.message?.appointment||d.message?.name||d.data?.name;
-    const res=apptName?{success:true,appointment:apptName}:(d.message||{});
-    if(res.success||apptName){
+    const res=await callAPI('book_appointment',{customer_name:name,customer_phone:phone,salon_type:ST,service:svc,stylist:styl||'',appointment_date:date,appointment_time:time,notes});
+    if(res&&res.success&&res.appointment){
+      // Save to localStorage for dashboard sync
       const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
-      all.push({name,phone,service:svc,salonType:ST,id:res.appointment,ts:new Date().toISOString()});
+      // Mark as synced since it's already saved to Frappe
+      all.push({name,phone,service:svc,stylist:styl,salonType:ST,date,time,id:res.appointment,synced:true,ts:new Date().toISOString()});
       localStorage.setItem('salon_bookings',JSON.stringify(all));
       try{const bc=new BroadcastChannel('salon_dashboard');bc.postMessage({type:'new_booking',name,service:svc,salonType:ST});bc.close();}catch(e){}
+
       document.getElementById('bookForm').style.display='none';
       document.getElementById('cn').textContent=name;
       document.getElementById('cs').textContent=svc;
       document.getElementById('cr').textContent=res.appointment;
       document.getElementById('succPanel').style.display='block';
-    }else{alert('Booking failed: '+(res.error||'Try again'));}
-  }catch(e){alert('Network error');}
+    }else{
+      errEl.textContent='Booking failed: '+(res?.error||'Please try again');
+      errEl.classList.add('show');
+    }
+  }catch(e){errEl.textContent='Error: '+e.message;errEl.classList.add('show');}
   btn.disabled=false;btn.textContent='✦ Book Appointment';
 }
-function resetForm(){document.getElementById('bookForm').reset();document.getElementById('bookForm').style.display='block';document.getElementById('succPanel').style.display='none';}
-loadSvcs();loadTeam();loadPkgs();loadSettings();
+
+function resetForm(){
+  document.getElementById('bookForm').reset();document.getElementById('bookForm').style.display='block';
+  document.getElementById('succPanel').style.display='none';document.getElementById('svc-note').classList.remove('show');
+}
+
+loadAll();
 </script>
 </body>
 </html>

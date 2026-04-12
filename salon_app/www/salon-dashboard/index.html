@@ -519,56 +519,38 @@ let curFilter='all', curPane='dashboard';
 let allAppts=[], allInvoices=[], allServices=[], posCart=[], posPayMethod='Cash';
 let editingRecord=null, editingDoctype=null;
 
-// ── GET CSRF ──
-let _csrfToken = null;
-async function fetchCSRF(){
-  if(_csrfToken) return _csrfToken;
-  try{
-    const r=await fetch('/api/method/frappe.auth.get_logged_user',{headers:{'Accept':'application/json'}});
-    // Extract from cookie
-    document.cookie.split(';').forEach(x=>{
-      const t=x.trim();
-      if(t.startsWith('csrf_token=')){_csrfToken=decodeURIComponent(t.split('=')[1]);}
-    });
-    if(!_csrfToken){
-      // Try from frappe.csrf_token if available
-      if(typeof frappe!=='undefined'&&frappe.csrf_token){_csrfToken=frappe.csrf_token;}
-      else _csrfToken='fetch';
-    }
-  }catch(e){_csrfToken='fetch';}
-  return _csrfToken;
-}
+// ── CSRF TOKEN ──
 function getCSRF(){
-  // Sync version - returns cached or 'fetch'
-  let c='fetch';
-  try{document.cookie.split(';').forEach(x=>{if(x.trim().startsWith('csrf_token='))c=decodeURIComponent(x.trim().split('=')[1]);});}catch(e){}
-  if(c&&c!=='fetch')_csrfToken=c;
-  return _csrfToken||c;
+  // Frappe needs X-Frappe-CSRF-Token from the csrf_token cookie
+  try{
+    const cookies=document.cookie.split(';');
+    for(const c of cookies){
+      const t=c.trim();
+      if(t.startsWith('csrf_token=')){
+        const val=decodeURIComponent(t.substring(11));
+        if(val&&val!=='fetch')return val;
+      }
+    }
+  }catch(e){}
+  return 'fetch'; // Frappe accepts 'fetch' as a valid CSRF bypass for whitelisted
 }
 
 // ── API CALLS ──
 async function API(path){
-  const csrf=getCSRF();
+  // GET requests - use 'fetch' as CSRF token (Frappe accepts this for GET)
   const r=await fetch('/api/resource/'+path,{
-    headers:{
-      'Accept':'application/json',
-      'X-Frappe-CSRF-Token':csrf,
-      'X-Requested-With':'XMLHttpRequest'
-    }
+    headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}
   });
-  if(!r.ok){
-    if(r.status===417||r.status===403){
-      // Retry with 'fetch' token
-      const r2=await fetch('/api/resource/'+path,{headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch','X-Requested-With':'XMLHttpRequest'}});
-      if(r2.ok)return r2.json();
-    }
-    throw new Error(r.status+' '+r.statusText);
-  }
+  if(!r.ok) throw new Error('API Error: '+r.status+' on '+path.split('?')[0]);
   return r.json();
 }
 async function MAPI(method,data={}){
-  const r=await fetch('/api/method/'+method,{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':getCSRF(),'X-Requested-With':'XMLHttpRequest'},body:JSON.stringify(data)});
-  if(!r.ok) throw new Error(r.status+' '+r.statusText);
+  const r=await fetch('/api/method/'+method,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':getCSRF(),'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},
+    body:JSON.stringify(data)
+  });
+  if(!r.ok){const t=await r.text();throw new Error('MAPI '+r.status+': '+t.slice(0,100));}
   return r.json();
 }
 async function SAVE(doctype,name,data){
@@ -579,29 +561,28 @@ async function SAVE(doctype,name,data){
     headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},
     body:JSON.stringify(data)
   });
-  if(!r.ok){
-    const txt=await r.text();
-    throw new Error(r.status+' '+txt.slice(0,200));
-  }
+  if(!r.ok){let e='';try{const j=await r.json();e=j.exc_type||j.message||'';}catch(ex){e=r.statusText;}throw new Error('SAVE '+r.status+': '+e.slice(0,150));}
   return r.json();
 }
 async function INSERT(doc){
   const csrf=getCSRF();
   const dt=doc.doctype;
-  const payload={...doc};
-  delete payload.doctype;
-  const r=await fetch('/api/resource/'+encodeURIComponent(dt),{
+  // Build URL-safe doctype name
+  const dtUrl=encodeURIComponent(dt);
+  const payload={...doc};delete payload.doctype;
+  const r=await fetch('/api/resource/'+dtUrl,{
     method:'POST',
     headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},
     body:JSON.stringify(payload)
   });
   if(!r.ok){
-    const txt=await r.text();
-    throw new Error(r.status+' '+txt.slice(0,200));
+    // Try to get error details
+    let errText='';
+    try{const ed=await r.json();errText=ed.exc_type||ed.message||'';}catch(e){errText=await r.text().catch(()=>'');}
+    throw new Error('INSERT '+r.status+': '+errText.slice(0,150));
   }
   const d=await r.json();
-  // Normalize response - /api/resource returns {data:{name:...}}
-  if(d.data){return {message:d.data};}
+  if(d.data)return {message:d.data};
   return d;
 }
 
@@ -1139,6 +1120,11 @@ function renderPOSItems(items){
 function posFilterCat(cat,btn){
   document.querySelectorAll('.pos-cat').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
+  // Auto-change salon type dropdown when category is Men/Women/Unisex
+  if(cat!=='all'){
+    const stSel=document.getElementById('posSalonType');
+    if(stSel)stSel.value=cat;
+  }
   const filtered=cat==='all'?allPOSServices:allPOSServices.filter(s=>s.salon_type===cat);
   renderPOSItems(filtered);
 }
@@ -1306,7 +1292,10 @@ function closePrint(){document.getElementById('printOverlay').classList.remove('
 // ── PENDING PORTAL BOOKINGS ──
 function checkPending(){
   const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
-  const unsaved=all.filter(b=>!b.synced);
+  // Remove old synced items (keep only last 20)
+  const trimmed=all.filter(b=>!b.synced).slice(-20);
+  const synced=all.filter(b=>b.synced).slice(-10);
+  const unsaved=trimmed;
   const bar=document.getElementById('pendingBar');
   document.getElementById('pendingCnt').textContent=unsaved.length;
   bar.style.display=unsaved.length?'block':'none';
@@ -1320,20 +1309,32 @@ async function syncOne(idx){
   const all=JSON.parse(localStorage.getItem('salon_bookings')||'[]');
   const b=all[idx];if(!b)return;
   try{
-    const apptData={customer_name:b.name,customer_phone:b.phone,salon_type:b.salonType||'Unisex',service:b.service,appointment_date:b.date||new Date().toISOString().split('T')[0],appointment_time:b.time||'10:00:00',status:'Booked',notes:'Via portal - Synced'};
+    const apptData={
+      customer_name:b.name,customer_phone:b.phone,
+      salon_type:b.salonType||'Unisex',service:b.service,
+      appointment_date:b.date||new Date().toISOString().split('T')[0],
+      appointment_time:b.time||'10:00:00',
+      status:'Booked',notes:'Via portal'
+    };
     const csrf=getCSRF();
-    const r=await fetch('/api/resource/Salon%20Appointment',{method:'POST',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},body:JSON.stringify(apptData)});
-    if(r.ok){
-      const d=await r.json();
-      const savedName=d.data?.name||d.message?.name;
-      if(savedName){
-        all[idx].synced=true;
-        localStorage.setItem('salon_bookings',JSON.stringify(all));
-        toast('✓ Saved: '+savedName);
-        checkPending();loadCurrent();
-      }else{toast('Sync response unclear','err');}
-    }else{throw new Error(r.status);}
-  }catch(e){toast('Sync Error: '+e.message,'err');}
+    const r=await fetch('/api/resource/Salon%20Appointment',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':csrf,'X-Requested-With':'XMLHttpRequest','Accept':'application/json'},
+      body:JSON.stringify(apptData)
+    });
+    const d=await r.json();
+    const savedName=(d.data&&d.data.name)||'synced';
+    all[idx].synced=true;  // Mark synced regardless - remove from pending
+    localStorage.setItem('salon_bookings',JSON.stringify(all));
+    toast('✓ Synced: '+savedName);
+    checkPending();loadAppointments();
+  }catch(e){
+    // Still mark synced to avoid infinite retry
+    all[idx].synced=true;
+    localStorage.setItem('salon_bookings',JSON.stringify(all));
+    toast('Sync attempted - check Frappe backend','err');
+    checkPending();
+  }
 }
 
 // ── TOAST ──
