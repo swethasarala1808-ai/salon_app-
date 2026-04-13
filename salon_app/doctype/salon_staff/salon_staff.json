@@ -54,6 +54,12 @@
       "fieldtype": "Check",
       "label": "Is Active",
       "default": "1"
+    },
+    {
+      "fieldname": "branch",
+      "fieldtype": "Link",
+      "label": "Branch",
+      "options": "Salon Branch"
     }
   ],
   "permissions": [

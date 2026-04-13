@@ -105,6 +105,11 @@ footer{background:#020b18;border-top:1px solid var(--border);padding:32px 20px;t
 .err-msg.show{display:block}
 @media(max-width:900px){.bk-wrap{grid-template-columns:1fr}}
 @media(max-width:600px){.frow{grid-template-columns:1fr}.hero h1{font-size:2.2em}}
+
+.branch-bar{background:rgba(20,241,177,.06);border-bottom:1px solid rgba(20,241,177,.15);padding:8px 20px;display:flex;align-items:center;gap:12px;font-size:.82em;color:var(--muted)}
+.branch-bar select{background:rgba(3,14,31,.8);border:1px solid rgba(20,241,177,.2);border-radius:6px;color:var(--text);padding:4px 10px;font-family:'Manrope',sans-serif;font-size:.85em;outline:none;cursor:pointer}
+.branch-bar select:focus{border-color:var(--p)}
+.branch-lbl{color:var(--p);font-weight:700}
 </style>
 </head>
 <body>
@@ -117,6 +122,14 @@ footer{background:#020b18;border-top:1px solid var(--border);padding:32px 20px;t
     <a href="#booking" class="nav-book">Book Now</a>
   </div>
 </header>
+
+<div class="branch-bar" id="branchBar" style="display:none">
+  <span class="branch-lbl">📍 Branch:</span>
+  <select id="branchSel" onchange="onBranchChange(this.value)">
+    <option value="">All Branches</option>
+  </select>
+  <span id="branchInfo" style="color:var(--muted);font-size:.8em"></span>
+</div>
 
 <section class="hero">
   <div class="hglow"></div>
@@ -276,20 +289,67 @@ function callAPI(method, params) {
   .catch(function(e) { console.error("API fail", method, e); return []; });
 }
 
+var currentBranch = "";
+
 function loadSettings() {
-  callAPI("get_settings", {}).then(function(s) {
-    if (!s || !s.phone) return;
-    var digits = s.phone.replace(/\D/g, "");
-    var waNum = digits.length === 10 ? "91" + digits : digits;
-    document.getElementById("waF").href = "https://wa.me/" + waNum;
-    var info = "📞 " + s.phone + "  |  🕐 " + (s.hours || "9 AM - 8 PM") + (s.address ? "  |  📍 " + s.address : "");
-    document.getElementById("infoCont").textContent = info;
-    document.getElementById("ftInfo").textContent = info;
+  // Load per-type settings first
+  callAPI("get_salon_settings", {salon_type: ST}).then(function(s) {
+    if (!s || !s.phone) {
+      callAPI("get_settings", {}).then(applySettings);
+      return;
+    }
+    applySettings({
+      phone: s.phone || s.whatsapp,
+      hours: s.working_hours,
+      address: s.address || s.city,
+      hours_global: s.working_hours
+    });
+    if (s.salon_name) document.title = s.salon_name + " | Book Appointment";
+  }).catch(function() {
+    callAPI("get_settings", {}).then(applySettings);
+  });
+  // Load branches
+  loadBranches();
+}
+
+function applySettings(s) {
+  if (!s || !s.phone) return;
+  var digits = (s.phone || "").replace(/\D/g, "");
+  var waNum = digits.length === 10 ? "91" + digits : digits;
+  document.getElementById("waF").href = "https://wa.me/" + waNum;
+  var info = "📞 " + s.phone + "  |  🕐 " + (s.hours || s.hours_global || "9 AM - 8 PM") + (s.address ? "  |  📍 " + s.address : "");
+  document.getElementById("infoCont").textContent = info;
+  document.getElementById("ftInfo").textContent = info;
+}
+
+function loadBranches() {
+  callAPI("get_branches", {}).then(function(branches) {
+    if (!branches || !branches.length) return;
+    var bar = document.getElementById("branchBar");
+    var sel = document.getElementById("branchSel");
+    bar.style.display = "flex";
+    sel.innerHTML = '<option value="">All Branches</option>';
+    branches.forEach(function(b) {
+      var o = document.createElement("option");
+      o.value = b.branch_name || b.name;
+      o.textContent = (b.branch_name || b.name) + (b.city ? " — " + b.city : "");
+      sel.appendChild(o);
+    });
   });
 }
 
+function onBranchChange(branch) {
+  currentBranch = branch;
+  // Update info display
+  var info = document.getElementById("branchInfo");
+  info.textContent = branch ? "Showing services for " + branch : "";
+  // Reload services and staff for this branch
+  loadServices();
+  loadTeam();
+}
+
 function loadServices() {
-  callAPI("get_services", {salon_type: ST}).then(function(svcs) {
+  callAPI("get_services", {salon_type: ST, branch: currentBranch}).then(function(svcs) {
     allServices = svcs || [];
     var grid = document.getElementById("srvGrid");
     var sel = document.getElementById("b-svc");
@@ -375,7 +435,7 @@ function setSvc(name) {
 }
 
 function loadTeam() {
-  callAPI("get_staff", {salon_type: ST}).then(function(staff) {
+  callAPI("get_staff", {salon_type: ST, branch: currentBranch}).then(function(staff) {
     allStaff = staff || [];
     var grid = document.getElementById("teamGrid");
     var sel = document.getElementById("b-styl");
@@ -411,7 +471,7 @@ function loadTeam() {
 }
 
 function loadPackages() {
-  callAPI("get_packages", {salon_type: ST}).then(function(pkgs) {
+  callAPI("get_packages", {salon_type: ST, branch: currentBranch}).then(function(pkgs) {
     var grid = document.getElementById("pkgGrid");
     if (!pkgs || !pkgs.length) {
       grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Packages coming soon!</div>';

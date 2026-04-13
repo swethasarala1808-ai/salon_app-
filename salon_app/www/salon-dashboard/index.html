@@ -724,12 +724,17 @@ async function updateStatus(name,status){
 // ── CUSTOMERS ──
 async function loadCustomers(){
   try{
-    let url='Salon Customer?fields=["name","full_name","phone","gender","salon_type","total_visits","loyalty_points"]&limit=200';
-    if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
-    const r=await API(url); const list=r.data||[];
+    // Use method API to avoid 417 CSRF issues
+    const stype=curFilter!=='all'?curFilter:'';
+    const r=await fetch('/api/method/salon_app.api.get_customers'+(stype?'?salon_type='+encodeURIComponent(stype):''),{
+      headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}
+    });
+    if(!r.ok) throw new Error('Customer API '+r.status);
+    const d=await r.json();
+    const list2=list;
     const tb=document.getElementById('custBody');
-    if(!list.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">No customers yet</div></td></tr>';return;}
-    tb.innerHTML=list.map(c=>`<tr>
+    if(!list2.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">No customers yet</div></td></tr>';return;}
+    tb.innerHTML=(list2||list).map(c=>`<tr>
       <td><b>${c.full_name||'—'}</b></td><td>${c.phone||'—'}</td>
       <td>${c.gender||'—'}</td><td>${sBadge(c.salon_type)}</td>
       <td>${c.total_visits||0}</td>

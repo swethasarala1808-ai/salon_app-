@@ -8,6 +8,8 @@ def after_install():
     _create_services()
     _create_staff()
     _create_packages()
+    _create_branches()
+    _create_type_settings()
     frappe.db.commit()
     print("Salon App setup complete!")
 
@@ -136,3 +138,52 @@ def _create_packages():
             except Exception as e:
                 print(f"  Warning package {name}: {e}")
     print(f"  Packages created")
+
+
+def _create_branches():
+    """Create sample branches"""
+    branches = [
+        ("Main Branch", "Bengaluru", "MG Road, Bengaluru - 560001", "+91 98765 43210"),
+        ("Chennai Branch", "Chennai", "Anna Nagar, Chennai - 600040", "+91 98765 43220"),
+    ]
+    for name, city, addr, phone in branches:
+        if not frappe.db.exists("Salon Branch", name):
+            try:
+                frappe.get_doc({
+                    "doctype": "Salon Branch",
+                    "branch_name": name,
+                    "city": city,
+                    "address": addr,
+                    "phone": phone,
+                    "is_active": 1
+                }).insert(ignore_permissions=True)
+            except Exception as e:
+                print(f"  Warning branch {name}: {e}")
+    print("  Branches created")
+
+
+def _create_type_settings():
+    """Create per-type settings"""
+    settings = [
+        ("Men", "Men's Grooming Studio", "Expert cuts, beard styling & grooming", "+91 98765 43210", "9 AM - 8 PM Daily"),
+        ("Women", "Women's Beauty Studio", "Hair, skin, makeup & bridal services", "+91 98765 43211", "9 AM - 8 PM Daily"),
+        ("Unisex", "Unisex Salon", "Hair spa, keratin, massage for everyone", "+91 98765 43212", "9 AM - 8 PM Daily"),
+    ]
+    for stype, name, tagline, phone, hours in settings:
+        if not frappe.db.exists("Salon Type Settings", stype):
+            try:
+                frappe.get_doc({
+                    "doctype": "Salon Type Settings",
+                    "salon_type": stype,
+                    "salon_name": name,
+                    "tagline": tagline,
+                    "phone": phone,
+                    "working_hours": hours,
+                    "google_rating": 4.9,
+                    "upi_id": "salon@upi",
+                    "address": "Bengaluru, Karnataka",
+                    "city": "Bengaluru"
+                }).insert(ignore_permissions=True)
+            except Exception as e:
+                print(f"  Warning settings {stype}: {e}")
+    print("  Type settings created")

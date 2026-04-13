@@ -1,0 +1,110 @@
+{
+  "name": "Salon Type Settings",
+  "doctype": "DocType",
+  "module": "Salon App",
+  "custom": 0,
+  "autoname": "field:salon_type",
+  "fields": [
+    {
+      "fieldname": "salon_type",
+      "fieldtype": "Select",
+      "label": "Salon Type",
+      "options": "Men\nWomen\nUnisex",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "salon_name",
+      "fieldtype": "Data",
+      "label": "Salon Name",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "tagline",
+      "fieldtype": "Data",
+      "label": "Tagline"
+    },
+    {
+      "fieldname": "phone",
+      "fieldtype": "Data",
+      "label": "Phone"
+    },
+    {
+      "fieldname": "whatsapp",
+      "fieldtype": "Data",
+      "label": "WhatsApp Number"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email"
+    },
+    {
+      "fieldname": "address",
+      "fieldtype": "Small Text",
+      "label": "Address"
+    },
+    {
+      "fieldname": "city",
+      "fieldtype": "Data",
+      "label": "City"
+    },
+    {
+      "fieldname": "working_hours",
+      "fieldtype": "Data",
+      "label": "Working Hours",
+      "default": "9 AM - 8 PM Daily"
+    },
+    {
+      "fieldname": "upi_id",
+      "fieldtype": "Data",
+      "label": "UPI ID"
+    },
+    {
+      "fieldname": "google_rating",
+      "fieldtype": "Float",
+      "label": "Google Rating",
+      "default": "4.9"
+    },
+    {
+      "fieldname": "about_us",
+      "fieldtype": "Text",
+      "label": "About Us"
+    },
+    {
+      "fieldname": "hero_title",
+      "fieldtype": "Data",
+      "label": "Hero Title"
+    },
+    {
+      "fieldname": "hero_subtitle",
+      "fieldtype": "Data",
+      "label": "Hero Subtitle"
+    },
+    {
+      "fieldname": "branch",
+      "fieldtype": "Link",
+      "label": "Default Branch",
+      "options": "Salon Branch"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1
+    },
+    {
+      "role": "Salon Owner",
+      "read": 1,
+      "write": 1,
+      "create": 1
+    },
+    {
+      "role": "Guest",
+      "read": 1
+    }
+  ]
+}
