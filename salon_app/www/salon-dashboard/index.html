@@ -731,10 +731,10 @@ async function loadCustomers(){
     });
     if(!r.ok) throw new Error('Customer API '+r.status);
     const d=await r.json();
-    const list2=list;
+    const custList=d.message||[];
     const tb=document.getElementById('custBody');
-    if(!list2.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">No customers yet</div></td></tr>';return;}
-    tb.innerHTML=(list2||list).map(c=>`<tr>
+    if(!custList.length){tb.innerHTML='<tr><td colspan="6"><div class="empty">No customers yet</div></td></tr>';return;}
+    tb.innerHTML=custList.map(c=>`<tr>
       <td><b>${c.full_name||'—'}</b></td><td>${c.phone||'—'}</td>
       <td>${c.gender||'—'}</td><td>${sBadge(c.salon_type)}</td>
       <td>${c.total_visits||0}</td>
@@ -743,7 +743,7 @@ async function loadCustomers(){
         <button class="act-btn" onclick="openSidePanel('edit_customer','${c.name}')">✏ Edit</button>
       </td>
     </tr>`).join('');
-  }catch(e){document.getElementById('custBody').innerHTML='<tr><td colspan="6"><div class="empty">Error: '+e.message+'</div></td></tr>';}
+  }catch(e){console.error('Customer load error:',e);document.getElementById('custBody').innerHTML='<tr><td colspan="6"><div class="empty">Error loading customers: '+e.message+'</div></td></tr>';}
 }
 
 // ── INVOICES ──
