@@ -821,21 +821,25 @@ async function printInvoice(name){
 // ── SERVICES ──
 async function loadServices(){
   try{
-    let url='Salon Service?fields=["name","service_name","salon_type","category","price","duration_minutes","is_active"]&limit=200';
-    if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
-    const r=await API(url); const list=r.data||[];
+    const stype=curFilter!=='all'?curFilter:'';
+    const r=await fetch('/api/method/salon_app.api.get_services'+(stype?'?salon_type='+encodeURIComponent(stype):''),{
+      headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}
+    });
+    if(!r.ok) throw new Error('Services API '+r.status);
+    const d=await r.json();
+    const list=d.message||[];
     const tb=document.getElementById('svcBody');
     if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No services found</div></td></tr>';return;}
     tb.innerHTML=list.map(s=>`<tr>
-      <td><b>${s.service_name||'—'}</b></td>
+      <td><b>${s.service_name||s.name||'—'}</b></td>
       <td>${sBadge(s.salon_type)}</td>
       <td>${s.category||'—'}</td>
-      <td>₹${Number(s.price||0).toLocaleString('en-IN')}</td>
+      <td>Rs.${Number(s.price||0).toLocaleString('en-IN')}</td>
       <td>${s.duration_minutes||0} mins</td>
       <td><span class="badge ${s.is_active?'b-active':'b-inactive'}">${s.is_active?'Active':'Inactive'}</span></td>
       <td>
-        <button class="act-btn" onclick="openSidePanel('view_service','${s.name}')">👁 View</button>
-        <button class="act-btn" onclick="openSidePanel('edit_service','${s.name}')">✏ Edit</button>
+        <button class="act-btn" onclick="openSidePanel('view_service','${s.name||s.service_name}')">View</button>
+        <button class="act-btn" onclick="openSidePanel('edit_service','${s.name||s.service_name}')">Edit</button>
       </td>
     </tr>`).join('');
   }catch(e){document.getElementById('svcBody').innerHTML='<tr><td colspan="7"><div class="empty">Error: '+e.message+'</div></td></tr>';}
@@ -844,21 +848,25 @@ async function loadServices(){
 // ── STAFF ──
 async function loadStaff(){
   try{
-    let url='Salon Staff?fields=["name","staff_name","salon_type","role","specialization","phone","experience_years","is_active"]&limit=100';
-    if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
-    const r=await API(url); const list=r.data||[];
+    const stype=curFilter!=='all'?curFilter:'';
+    const r=await fetch('/api/method/salon_app.api.get_staff'+(stype?'?salon_type='+encodeURIComponent(stype):''),{
+      headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}
+    });
+    if(!r.ok) throw new Error('Staff API '+r.status);
+    const d=await r.json();
+    const list=d.message||[];
     const tb=document.getElementById('staffBody');
     if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No staff found</div></td></tr>';return;}
     tb.innerHTML=list.map(s=>`<tr>
-      <td><b>${s.staff_name||'—'}</b></td>
+      <td><b>${s.staff_name||s.name||'—'}</b></td>
       <td>${sBadge(s.salon_type)}</td>
       <td>${s.role||'—'}</td>
       <td>${s.specialization||'—'}</td>
       <td>${s.phone||'—'}</td>
       <td><span class="badge ${s.is_active?'b-active':'b-inactive'}">${s.is_active?'Active':'Inactive'}</span></td>
       <td>
-        <button class="act-btn" onclick="openSidePanel('view_staff','${s.name}')">👁 View</button>
-        <button class="act-btn" onclick="openSidePanel('edit_staff','${s.name}')">✏ Edit</button>
+        <button class="act-btn" onclick="openSidePanel('view_staff','${s.name||s.staff_name}')">View</button>
+        <button class="act-btn" onclick="openSidePanel('edit_staff','${s.name||s.staff_name}')">Edit</button>
       </td>
     </tr>`).join('');
   }catch(e){document.getElementById('staffBody').innerHTML='<tr><td colspan="7"><div class="empty">Error: '+e.message+'</div></td></tr>';}
@@ -867,9 +875,13 @@ async function loadStaff(){
 // ── PACKAGES ──
 async function loadPackages(){
   try{
-    let url='Salon Package?fields=["name","package_name","salon_type","price","validity_days","discount_percent","is_active","description"]&limit=100';
-    if(curFilter!=='all')url+='&filters=[["salon_type","=","'+curFilter+'"]]';
-    const r=await API(url); const list=r.data||[];
+    const stype=curFilter!=='all'?curFilter:'';
+    const r=await fetch('/api/method/salon_app.api.get_packages'+(stype?'?salon_type='+encodeURIComponent(stype):''),{
+      headers:{'Accept':'application/json','X-Frappe-CSRF-Token':'fetch'}
+    });
+    if(!r.ok) throw new Error('Packages API '+r.status);
+    const d=await r.json();
+    const list=d.message||[];
     const tb=document.getElementById('pkgBody');
     if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty">No packages found</div></td></tr>';return;}
     tb.innerHTML=list.map(p=>`<tr>

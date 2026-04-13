@@ -1,0 +1,127 @@
+{
+  "name": "Salon Company",
+  "doctype": "DocType",
+  "module": "Salon App",
+  "custom": 0,
+  "autoname": "field:company_name",
+  "naming_rule": "By fieldname",
+  "is_submittable": 0,
+  "fields": [
+    {
+      "fieldname": "company_name",
+      "fieldtype": "Data",
+      "label": "Company Name",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "owner_name",
+      "fieldtype": "Data",
+      "label": "Owner Name",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "phone",
+      "fieldtype": "Data",
+      "label": "Phone",
+      "reqd": 1
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email"
+    },
+    {
+      "fieldname": "website",
+      "fieldtype": "Data",
+      "label": "Website"
+    },
+    {
+      "fieldname": "gstin",
+      "fieldtype": "Data",
+      "label": "GSTIN"
+    },
+    {
+      "fieldname": "pan",
+      "fieldtype": "Data",
+      "label": "PAN"
+    },
+    {
+      "fieldname": "address",
+      "fieldtype": "Small Text",
+      "label": "Registered Address"
+    },
+    {
+      "fieldname": "city",
+      "fieldtype": "Data",
+      "label": "City"
+    },
+    {
+      "fieldname": "state",
+      "fieldtype": "Data",
+      "label": "State",
+      "default": "Karnataka"
+    },
+    {
+      "fieldname": "pincode",
+      "fieldtype": "Data",
+      "label": "Pincode"
+    },
+    {
+      "fieldname": "logo",
+      "fieldtype": "Attach Image",
+      "label": "Company Logo"
+    },
+    {
+      "fieldname": "established_year",
+      "fieldtype": "Int",
+      "label": "Established Year"
+    },
+    {
+      "fieldname": "about",
+      "fieldtype": "Text",
+      "label": "About Company"
+    },
+    {
+      "fieldname": "section_break_types",
+      "fieldtype": "Section Break",
+      "label": "Salon Types"
+    },
+    {
+      "fieldname": "salon_types",
+      "fieldtype": "Table",
+      "label": "Salon Types",
+      "options": "Salon Company Type"
+    },
+    {
+      "fieldname": "section_break_branches",
+      "fieldtype": "Section Break",
+      "label": "Branches"
+    },
+    {
+      "fieldname": "branches",
+      "fieldtype": "Table",
+      "label": "Branches",
+      "options": "Salon Company Branch"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 1
+    },
+    {
+      "role": "Salon Owner",
+      "read": 1,
+      "write": 1,
+      "create": 1
+    },
+    {
+      "role": "Guest",
+      "read": 1
+    }
+  ]
+}

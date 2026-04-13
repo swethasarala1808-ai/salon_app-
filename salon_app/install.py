@@ -8,6 +8,7 @@ def after_install():
     _create_services()
     _create_staff()
     _create_packages()
+    _create_company()
     _create_branches()
     _create_type_settings()
     frappe.db.commit()
@@ -187,3 +188,31 @@ def _create_type_settings():
             except Exception as e:
                 print(f"  Warning settings {stype}: {e}")
     print("  Type settings created")
+
+
+def _create_company():
+    """Create default salon company"""
+    if frappe.db.exists("Salon Company", "Luminescent Atelier"):
+        return
+    try:
+        doc = frappe.get_doc({
+            "doctype": "Salon Company",
+            "company_name": "Luminescent Atelier",
+            "owner_name": "Admin",
+            "phone": "+91 98765 43210",
+            "email": "admin@salon.com",
+            "city": "Bengaluru",
+            "state": "Karnataka",
+            "about": "3-in-1 Premium Salon — Men, Women and Unisex",
+            "established_year": 2020,
+            "salon_types": [
+                {"salon_type": "Men", "type_name": "Men Grooming Studio", "is_active": 1},
+                {"salon_type": "Women", "type_name": "Women Beauty Studio", "is_active": 1},
+                {"salon_type": "Unisex", "type_name": "Unisex Wellness", "is_active": 1},
+            ]
+        })
+        doc.insert(ignore_permissions=True)
+        frappe.db.commit()
+        print("  Company created")
+    except Exception as e:
+        print(f"  Warning company: {e}")
