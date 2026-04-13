@@ -176,3 +176,24 @@ def get_dashboard_stats(salon_type=None):
         "total_staff": cnt("Salon Staff", {"is_active": 1}),
         "total_services": cnt("Salon Service", {"is_active": 1}),
     }
+
+
+@frappe.whitelist()
+def get_invoices(salon_type=None):
+    """Get invoices - authenticated endpoint to avoid CSRF issues"""
+    try:
+        filters = {}
+        if salon_type and salon_type != "all":
+            filters["salon_type"] = salon_type
+        return frappe.get_all(
+            "Salon Invoice",
+            fields=["name", "customer_name", "salon_type", "service",
+                    "appointment", "invoice_date", "subtotal", "grand_total",
+                    "payment_status", "payment_method"],
+            filters=filters,
+            order_by="invoice_date desc",
+            limit=300
+        )
+    except Exception as e:
+        frappe.log_error(str(e), "get_invoices Error")
+        return []
